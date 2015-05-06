@@ -1,9 +1,9 @@
-namespace moonchild {
+namespace mnc {
 
 class Value {
 
   public:
-    static enum Type {NUMBER, STRING};
+    enum Type {NUMBER, STRING};
 
     Value(Type type);
 

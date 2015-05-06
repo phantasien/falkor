@@ -2,4 +2,5 @@ deps
 *.o
 *.a
 config.log
+test/*-test
 

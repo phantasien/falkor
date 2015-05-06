@@ -1,6 +1,16 @@
-test: deps
+curdir := $(shell pwd)
 
-deps: deps/v8
+test: test-v8
+
+test-v8: deps/v8 deps/gtest
+	@g++ -o test/v8-test \
+	     src/value.cc \
+	     test/v8/tvalue.cc \
+	     -I${curdir}/deps/gtest/include \
+	     -I${curdir}/src \
+	     -L${curdir}/deps/gtest/cbuild \
+	     -lgtest -lgtest_main
+	@./test/v8-test
 
 deps/v8: 
 	@mkdir -p deps
@@ -10,11 +20,11 @@ deps/v8:
 
 deps/gtest: deps/gtest.zip
 
-
 deps/gtest.zip:
 	@-curl -L https://googletest.googlecode.com/files/gtest-1.7.0.zip > deps/gtest.zip
 	@unzip -d deps deps/gtest.zip
 	@mv deps/gtest-1.7.0 deps/gtest
-	@cd deps/gtest && ./configure && make
+	@mkdir deps/gtest/cbuild
+	@cd deps/gtest/cbuild && cmake -G"Unix Makefiles" .. && make
 
 .PHONY: test
