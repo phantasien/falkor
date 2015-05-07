@@ -41,6 +41,17 @@ namespace mnc {
 
 Value* CreateValue(v8::Local<v8::Value>);
 
+}
+
+#endif
+
+#ifdef MNC_JSC
+
+#include <JavascriptCore/JavascriptCore.h>
+
+namespace mnc {
+
+Value* CreateValue(JSContextRef, JSValueRef, JSValueRef*);
 
 }
 

@@ -66,7 +66,7 @@ class JSCFunctionContext : FunctionContext {
     JSObjectRef this_ref_;
     size_t argument_count_;
     const JSValueRef* arguments_ref_;
-    JSValueRef* exception_;
+    JSValueRef* exception_ref_;
 };
 
 #define MNC_FUNC(FuncName) \
@@ -77,14 +77,14 @@ JSValueRef WRAP_FUNC_NAME(FuncName)( \
     JSObjectRef this_ref, \
     size_t argument_count, \
     const JSValueRef* arguments_ref, \
-    JSValueRef* exception) { \
+    JSValueRef* exception_ref) { \
   JSCFunctionContext* ctx = new JSCFunctionContext( \
     context_ref, \
     function_ref, \
     this_ref, \
     argument_count, \
     arguments_ref, \
-    exception \
+    exception_ref \
   ); \
   FuncName(ctx); \
   delete ctx; \

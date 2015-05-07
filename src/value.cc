@@ -40,11 +40,31 @@ Value* Value::Undefined = new Value(REF);
 
 namespace mnc {
 
-Value* CreateValue(v8::Local<v8::Value> v8Value) {
+Value* CreateValue(v8::Local<v8::Value> v8_value) {
   Value* result = Value::Null;
 
-  if (v8Value->IsNumber()) {
-    result = (Value*) new Number(v8Value->NumberValue());
+  if (v8_value->IsNumber()) {
+    result = (Value*) new Number(v8_value->NumberValue());
+  }
+
+  return result;
+}
+
+
+}
+
+#endif
+
+
+#ifdef MNC_JSC
+
+namespace mnc {
+
+Value* CreateValue(JSContextRef context_ref, JSValueRef jsc_value, JSValueRef* exception_ref) {
+  Value* result = Value::Null;
+
+  if (JSValueIsNumber(context_ref, jsc_value)) {
+    result = (Value*) new Number(JSValueToNumber(context_ref, jsc_value, exception_ref));
   }
 
   return result;
