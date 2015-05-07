@@ -1,6 +1,15 @@
 #ifndef MNC_VALUE
 #define MNC_VALUE
 
+#ifdef MNC_V8
+#include <v8.h>
+#endif
+
+#ifdef MNC_JSC
+#include <JavascriptCore/JavascriptCore.h>
+#endif
+
+
 namespace mnc {
 
 class Value {
@@ -17,6 +26,15 @@ class Value {
     bool IsUndefined();
     double NumberValue();
 
+#ifdef MNC_V8
+    static Value* Create(v8::Local<v8::Value>);
+#endif
+
+#ifdef MNC_JSC
+    static Value* Create(JSContextRef, JSValueRef, JSValueRef*);
+#endif
+
+
   protected:
     Type type_;
 };
@@ -32,29 +50,5 @@ class Number : Value {
 };
 
 }
-
-#ifdef MNC_V8
-
-#include <v8.h>
-
-namespace mnc {
-
-Value* CreateValue(v8::Local<v8::Value>);
-
-}
-
-#endif
-
-#ifdef MNC_JSC
-
-#include <JavascriptCore/JavascriptCore.h>
-
-namespace mnc {
-
-Value* CreateValue(JSContextRef, JSValueRef, JSValueRef*);
-
-}
-
-#endif
 
 #endif

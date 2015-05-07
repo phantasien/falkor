@@ -20,7 +20,7 @@ Value* V8FunctionContext::GetArgument(int index) {
   Value * argument = Value::Null;
 
   if (infos_->Length() > index) {
-    argument = CreateValue((*infos_)[index]);
+    argument = Value::Create((*infos_)[index]);
   }
 
   return argument;
@@ -59,7 +59,7 @@ Value* JSCFunctionContext::GetArgument(int index) {
   Value * argument = Value::Null;
 
   if (argument_count_ > index) {
-    argument = CreateValue(context_ref_, arguments_ref_[index], exception_ref_);
+    argument = Value::Create(context_ref_, arguments_ref_[index], exception_ref_);
   }
 
   return argument;

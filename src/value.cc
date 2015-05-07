@@ -40,7 +40,7 @@ Value* Value::Undefined = new Value(REF);
 
 namespace mnc {
 
-Value* CreateValue(v8::Local<v8::Value> v8_value) {
+Value* Value::Create(v8::Local<v8::Value> v8_value) {
   Value* result = Value::Null;
 
   if (v8_value->IsNumber()) {
@@ -60,7 +60,7 @@ Value* CreateValue(v8::Local<v8::Value> v8_value) {
 
 namespace mnc {
 
-Value* CreateValue(JSContextRef context_ref, JSValueRef jsc_value, JSValueRef* exception_ref) {
+Value* Value::Create(JSContextRef context_ref, JSValueRef jsc_value, JSValueRef* exception_ref) {
   Value* result = Value::Null;
 
   if (JSValueIsNumber(context_ref, jsc_value)) {
