@@ -80,7 +80,7 @@ JSValueRef Value::Extract(JSContextRef context_ref) {
   JSValueRef result;
 
   if(IsNumber()) {
-      result = JSValueMakeNumber(context_ref, ((Value *) this)->NumberValue());
+      result = JSValueMakeNumber(context_ref, ((Number *) this)->NumberValue());
   } else {
       result = JSValueMakeNull(context_ref);
   }
