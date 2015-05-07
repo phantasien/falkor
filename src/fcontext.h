@@ -1,3 +1,6 @@
+#ifndef MNC_FCONTEXT
+#define MNC_FCONTEXT
+
 #include <vector>
 #include "value.h"
 
@@ -7,6 +10,7 @@ class FunctionContext {
   public:
     virtual int ArgsCount() = 0;
     virtual Value* GetArgument(int) = 0;
+    virtual void SetResult(Value&) = 0;
 };
 
 }
@@ -26,6 +30,7 @@ class V8FunctionContext : FunctionContext {
     V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>&);
     int ArgsCount();
     Value* GetArgument(int);
+    void SetResult(Value&);
 
   private:
     const v8::FunctionCallbackInfo<v8::Value>* infos_;
@@ -96,4 +101,4 @@ void FuncName(mnc::JSCFunctionContext* ctx)
 
 #endif
 
-
+#endif

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <fcontext.h>
+#include <mnc.h>
 
 
 #ifdef MNC_V8
@@ -13,14 +13,23 @@
 using namespace mnc;
 
 static int argsCount = 0;
-static Value* value = Value::Null;
+static Value* result = Value::Null;
 
 MNC_FUNC(CountArgs) {
   argsCount = ctx->ArgsCount();
 }
 
-MNC_FUNC(RetreiveNumberArgument) {
-  value = ctx->GetArgument(0);
+MNC_FUNC(Add) {
+  double val1 = ctx->GetArgument(0)->NumberValue();
+  double val2 = ctx->GetArgument(1)->NumberValue();
+  Value* result = (Value*) new Number(val1 + val2);
+
+  ctx->SetResult(*result);
+  delete result;
+}
+
+MNC_FUNC(CollectResult) {
+  result = ctx->GetArgument(0);
 }
 
 TEST(V8FunctionContext, CountArgs) {
@@ -32,11 +41,23 @@ TEST(V8FunctionContext, CountArgs) {
 
 TEST(V8FunctionContext, RetreiveNumberArgument) {
   TestContext testContext;
-  testContext.AddFunction("retreiveNumberArgument", WrapRetreiveNumberArgument);
-  testContext.RunJS("retreiveNumberArgument(1)");
-  EXPECT_EQ(true, value->IsNumber());
+  testContext.AddFunction("collectResult", WrapCollectResult);
+  testContext.RunJS("collectResult(1)");
+  EXPECT_EQ(true, result->IsNumber());
 
-  if (value->IsNumber()) {
-    EXPECT_EQ(1, ((Number *)value)->NumberValue());
+  if (result->IsNumber()) {
+    EXPECT_EQ(1, ((Number*) result)->NumberValue());
+  }
+}
+
+TEST(V8FunctionContext, Add) {
+  TestContext testContext;
+  testContext.AddFunction("add", WrapAdd);
+  testContext.AddFunction("collectResult", WrapCollectResult);
+  testContext.RunJS("collectResult(2)");
+  EXPECT_EQ(true, result->IsNumber());
+
+  if (result->IsNumber()) {
+    EXPECT_EQ(2, ((Number*) result)->NumberValue());
   }
 }

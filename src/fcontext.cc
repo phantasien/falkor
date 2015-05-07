@@ -26,6 +26,11 @@ Value* V8FunctionContext::GetArgument(int index) {
   return argument;
 }
 
+void V8FunctionContext::SetResult(Value& val) {
+  infos_->GetReturnValue().Set(val.Extract());
+}
+
+
 }
 
 #endif

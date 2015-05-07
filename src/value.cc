@@ -1,4 +1,5 @@
 #include "value.h"
+#include "../include/mnc.h"
 
 namespace mnc {
 
@@ -50,6 +51,15 @@ Value* Value::Create(v8::Local<v8::Value> v8_value) {
   return result;
 }
 
+v8::Local<v8::Value> Value::Extract() {
+  v8::Local<v8::Value> result;
+
+  if (IsNumber()) {
+    result = v8::Number::New(MoonChild::isolate, 1);
+  }
+
+  return result;
+}
 
 }
 

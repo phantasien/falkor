@@ -28,6 +28,7 @@ class Value {
 
 #ifdef MNC_V8
     static Value* Create(v8::Local<v8::Value>);
+    v8::Local<v8::Value> Extract();
 #endif
 
 #ifdef MNC_JSC
