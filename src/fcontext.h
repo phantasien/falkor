@@ -46,3 +46,13 @@ void FuncName(mnc::V8FunctionContext* ctx)
 #endif
 
 
+#ifdef MNC_JSC
+
+#include <JavascriptCore/JavascriptCore.h>
+
+
+
+
+#endif
+
+

@@ -1,14 +1,18 @@
 curdir := $(shell pwd)
 
-mnc_src := $(shell find src -name "*.cc")
-mnc_v8_obj := $(foreach src,${mnc_src}, $(subst .cc,.v8.o,$(src)))
+MNC_SRC := $(shell find src -name "*.cc")
+MNC_V8_OBJ := $(foreach src,${MNC_SRC}, $(subst .cc,.v8.o,$(src)))
+MNC_JSC_OBJ := $(foreach src,${MNC_SRC}, $(subst .cc,.jsc.o,$(src)))
 
-v8_test_src := $(shell find test/v8 -name "*.cc")
-v8_test_obj := $(foreach src,${v8_test_src}, $(subst .cc,.o,$(src)))
+V8_TEST_SRC := $(shell find test/v8 -name "*.cc")
+V8_TEST_OBJ := $(foreach src,${V8_TEST_SRC}, $(subst .cc,.o,$(src)))
 
-v8_cxx_flags := -I${curdir}/deps/v8/include \
+JSC_TEST_SRC := $(shell find test/jsc -name "*.cc")
+JSC_TEST_OBJ := $(foreach src,${JSC_TEST_SRC}, $(subst .cc,.o,$(src)))
+
+V8_CXX_FLAGS := -I${curdir}/src \
     -I${curdir}/deps/gtest/include \
-    -I${curdir}/src \
+    -I${curdir}/deps/v8/include \
     -DMNC_V8 \
     -w \
     -L${curdir}/deps/gtest/cbuild \
@@ -17,24 +21,46 @@ v8_cxx_flags := -I${curdir}/deps/v8/include \
     -stdlib=libstdc++ \
     -lv8_base -lv8_libbase -lv8_snapshot -lv8_libplatform
 
+JSC_CXX_FLAGS := -I${curdir}/src \
+    -I${curdir}/deps/gtest/include \
+    -DMNC_JSC \
+    -w \
+    -L${curdir}/deps/gtest/cbuild \
+    -lgtest -lgtest_main -lpthread \
+    -stdlib=libstdc++ \
+    -fobjc-arc -framework JavascriptCore
+
 clean:
-	@find test -name "*.o" -exec rm {} ';' 
-	@find src -name "*.o" -exec rm {} ';' 
+	@find test -name "run" -exec rm {} ';'
+	@find test -name "*.o" -exec rm {} ';'
+	@find src -name "*.o" -exec rm {} ';'
 
 src/%.v8.o: src/%.cc
-	@g++ -o $@ -c $< ${v8_cxx_flags}
-	     
+	@g++ -o $@ -c $< ${V8_CXX_FLAGS}
+
+src/%.jsc.o: src/%.cc
+	@g++ -o $@ -c $< ${JSC_CXX_FLAGS}
 
 test/v8/%.o: test/v8/%.cc
-	@g++ -o $@ -c $< ${v8_cxx_flags}
+	@g++ -o $@ -c $< ${V8_CXX_FLAGS}
 
-test/v8/run: deps/v8 deps/gtest ${mnc_v8_obj} ${v8_test_obj}
-	@g++ -o test/v8/run ${mnc_v8_obj} ${v8_test_obj} ${v8_cxx_flags}
+test/jsc/%.o: test/jsc/%.cc
+	@g++ -o $@ -c $< ${JSC_CXX_FLAGS}
 
-test: test-v8
+test/v8/run: deps/v8 deps/gtest ${MNC_V8_OBJ} ${V8_TEST_OBJ}
+	@g++ -o test/v8/run ${MNC_V8_OBJ} ${V8_TEST_OBJ} ${V8_CXX_FLAGS}
+
+test/jsc/run: deps/gtest ${MNC_JSC_OBJ} ${JSC_TEST_OBJ}
+	@g++ -o test/jsc/run ${MNC_JSC_OBJ} ${JSC_TEST_OBJ} ${JSC_CXX_FLAGS}
+
+test-jsc: test/jsc/run
+	@./test/jsc/run
 
 test-v8: test/v8/run
 	@./test/v8/run
+
+test: test-v8 test-jsc
+
 
 deps/v8:
 	@mkdir -p deps
