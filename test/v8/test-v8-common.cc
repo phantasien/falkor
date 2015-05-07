@@ -2,9 +2,12 @@
 #include <functional>
 #include "test-v8-common.h"
 
+using namespace v8;
+
 static Isolate* isolate = Isolate::New();
 static Isolate::Scope isolatescope(isolate);
 static HandleScope handle_scope(isolate);
+
 
 TestContext::TestContext() {
   // Create a new Isolate and make it the current one.

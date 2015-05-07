@@ -6,6 +6,7 @@ namespace mnc {
 class FunctionContext {
   public:
     virtual int ArgsCount() = 0;
+    virtual Value* GetArgument(int) = 0;
 };
 
 }
@@ -24,6 +25,7 @@ class V8FunctionContext : FunctionContext {
   public:
     V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>&);
     int ArgsCount();
+    Value* GetArgument(int);
 
   private:
     const v8::FunctionCallbackInfo<v8::Value>* infos_;
@@ -56,6 +58,7 @@ class JSCFunctionContext : FunctionContext {
   public:
     JSCFunctionContext(JSContextRef, JSObjectRef, JSObjectRef, size_t, const JSValueRef*, JSValueRef*);
     int ArgsCount();
+    Value* GetArgument(int);
 
   private:
     JSContextRef context_ref_;

@@ -3,8 +3,6 @@
 
 #include <v8.h>
 
-using namespace v8;
-
 class TestContext {
 
   public:
@@ -13,7 +11,7 @@ class TestContext {
     void RunJS(const char *);
 
   private:
-    Handle<ObjectTemplate> global_;
+    v8::Handle<v8::ObjectTemplate> global_;
 };
 
 #endif

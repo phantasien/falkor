@@ -13,9 +13,14 @@
 using namespace mnc;
 
 static int argsCount = 0;
+static Value* value = Value::Null;
 
 MNC_FUNC(CountArgs) {
   argsCount = ctx->ArgsCount();
+}
+
+MNC_FUNC(RetreiveNumberArgument) {
+  value = ctx->GetArgument(0);
 }
 
 TEST(V8FunctionContext, CountArgs) {
@@ -23,4 +28,15 @@ TEST(V8FunctionContext, CountArgs) {
   testContext.AddFunction("countArgs", WrapCountArgs);
   testContext.RunJS("countArgs(1, null, false)");
   EXPECT_EQ(3, argsCount);
+}
+
+TEST(V8FunctionContext, RetreiveNumberArgument) {
+  TestContext testContext;
+  testContext.AddFunction("retreiveNumberArgument", WrapRetreiveNumberArgument);
+  testContext.RunJS("retreiveNumberArgument(1)");
+  EXPECT_EQ(true, value->IsNumber());
+
+  if (value->IsNumber()) {
+    EXPECT_EQ(1, ((Number *)value)->NumberValue());
+  }
 }

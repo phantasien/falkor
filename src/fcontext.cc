@@ -1,14 +1,12 @@
 #include <cstddef>
 
 #include "fcontext.h"
-
+#include "value.h"
 
 
 #ifdef MNC_V8
 
-
 namespace mnc {
-
 
 V8FunctionContext::V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>& infos) {
   infos_ = &infos;
@@ -16,6 +14,16 @@ V8FunctionContext::V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>& 
 
 int V8FunctionContext::ArgsCount() {
   return infos_->Length();
+}
+
+Value* V8FunctionContext::GetArgument(int index) {
+  Value * argument = Value::Null;
+
+  if (infos_->Length() > index) {
+    argument = CreateValue((*infos_)[index]);
+  }
+
+  return argument;
 }
 
 }
