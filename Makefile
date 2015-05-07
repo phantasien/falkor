@@ -1,25 +1,42 @@
 curdir := $(shell pwd)
 
+mnc_src := $(shell find src -name "*.cc")
+mnc_v8_obj := $(foreach src,${mnc_src}, $(subst .cc,.v8.o,$(src)))
+
+v8_test_src := $(shell find test/v8 -name "*.cc")
+v8_test_obj := $(foreach src,${v8_test_src}, $(subst .cc,.o,$(src)))
+
+v8_cxx_flags := -I${curdir}/deps/v8/include \
+    -I${curdir}/deps/gtest/include \
+    -I${curdir}/src \
+    -DMNC_V8 \
+    -w \
+    -L${curdir}/deps/gtest/cbuild \
+    -L${curdir}/deps/v8/out/native \
+    -lgtest -lgtest_main -lpthread \
+    -stdlib=libstdc++ \
+    -lv8_base -lv8_libbase -lv8_snapshot -lv8_libplatform
+
+clean:
+	@find test -name "*.o" -exec rm {} ';' 
+	@find src -name "*.o" -exec rm {} ';' 
+
+src/%.v8.o: src/%.cc
+	@g++ -o $@ -c $< ${v8_cxx_flags}
+	     
+
+test/v8/%.o: test/v8/%.cc
+	@g++ -o $@ -c $< ${v8_cxx_flags}
+
+test/v8/run: deps/v8 deps/gtest ${mnc_v8_obj} ${v8_test_obj}
+	@g++ -o test/v8/run ${mnc_v8_obj} ${v8_test_obj} ${v8_cxx_flags}
+
 test: test-v8
 
-test-v8: deps/v8 deps/gtest
-	@g++ -o test/v8-test \
-	     src/fcontext.cc \
-	     src/value.cc \
-	     test/v8/tvalue.cc \
-	     test/v8/tfcontext.cc \
-	     -I${curdir}/deps/v8/include \
-	     -I${curdir}/deps/gtest/include \
-	     -I${curdir}/src \
-	     -L${curdir}/deps/gtest/cbuild \
-	     -L${curdir}/deps/v8/out/native \
-	     -lgtest -lgtest_main -lpthread \
-	     -stdlib=libstdc++ \
-	     -lv8_base -lv8_libbase -lv8_snapshot -lv8_libplatform \
-	     -DMNC_V8
-	@./test/v8-test
+test-v8: test/v8/run
+	@./test/v8/run
 
-deps/v8: 
+deps/v8:
 	@mkdir -p deps
 	@git clone --depth=1 https://github.com/phantasien/v8 deps/v8
 	@make -C deps/v8 builddeps
