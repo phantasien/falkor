@@ -19,10 +19,6 @@ bool Value::IsUndefined() {
   return this == Value::Undefined;
 }
 
-double Value::NumberValue() {
-  return -1;
-}
-
 Number::Number(double val) : Value(NUMBER) {
   val_ = val;
 }
@@ -55,7 +51,7 @@ v8::Local<v8::Value> Value::Extract() {
   v8::Local<v8::Value> result;
 
   if (IsNumber()) {
-    result = v8::Number::New(MoonChild::isolate, ((Value *) this)->NumberValue());
+    result = v8::Number::New(MoonChild::isolate, ((Number *) this)->NumberValue());
   }
 
   return result;

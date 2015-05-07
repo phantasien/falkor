@@ -24,7 +24,6 @@ class Value {
     bool IsNumber();
     bool IsNull();
     bool IsUndefined();
-    double NumberValue();
 
 #ifdef MNC_V8
     static Value* Create(v8::Local<v8::Value>);
