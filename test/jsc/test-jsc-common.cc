@@ -1,23 +1,13 @@
-#include <gtest/gtest.h>
-#include <fcontext.h>
+#include "test-jsc-common.h"
 
-using namespace mnc;
 
-static int argsCount = 0;
-
-MNC_FUNC(CountArgs) {
-  argsCount = ctx->ArgsCount();
-}
-
-TEST(JavascriptCoreFunctionContext, CountArgs) {
-  const char * rawSource = "countArgs(1, null, false)";
-
+void runFunction(const char * bindName, JSValueRef (*func)(JSContextRef, JSObjectRef, JSObjectRef, size_t, const JSValueRef*, JSValueRef*), const char * rawSource) {
   JSStaticValue staticValues[] = {
       { 0, 0, 0, 0 }
   };
 
   JSStaticFunction staticFunctions[] = {
-      { "countArgs", WrapCountArgs, kJSPropertyAttributeNone },
+      { bindName, func, kJSPropertyAttributeNone },
       { 0, 0, 0 }
   };
 
@@ -31,6 +21,4 @@ TEST(JavascriptCoreFunctionContext, CountArgs) {
   JSStringRef script = JSStringCreateWithUTF8CString(rawSource);
   JSValueRef exception = NULL;
   JSEvaluateScript(ctx, script, NULL, NULL, 1, &exception);
-
-  EXPECT_EQ(3, argsCount);
 }

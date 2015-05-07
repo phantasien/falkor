@@ -10,6 +10,10 @@ V8_TEST_OBJ := $(foreach src,${V8_TEST_SRC}, $(subst .cc,.o,$(src)))
 JSC_TEST_SRC := $(shell find test/jsc -name "*.cc")
 JSC_TEST_OBJ := $(foreach src,${JSC_TEST_SRC}, $(subst .cc,.o,$(src)))
 
+CMN_TEST_SRC := $(shell find test -depth 1 -name "*.cc")
+CMN_TEST_V8_OBJ := $(foreach src,${CMN_TEST_SRC}, $(subst .cc,.v8.o,$(src)))
+CMN_TEST_JSC_OBJ := $(foreach src,${CMN_TEST_SRC}, $(subst .cc,.jsc.o,$(src)))
+
 V8_CXX_FLAGS := -I${curdir}/src \
     -I${curdir}/deps/gtest/include \
     -I${curdir}/deps/v8/include \
@@ -41,17 +45,23 @@ src/%.v8.o: src/%.cc
 src/%.jsc.o: src/%.cc
 	@g++ -o $@ -c $< ${JSC_CXX_FLAGS}
 
+test/%.v8.o: test/%.cc
+	@g++ -o $@ -c $< ${V8_CXX_FLAGS}
+
+test/%.jsc.o: test/%.cc
+	@g++ -o $@ -c $< ${JSC_CXX_FLAGS}
+
 test/v8/%.o: test/v8/%.cc
 	@g++ -o $@ -c $< ${V8_CXX_FLAGS}
 
 test/jsc/%.o: test/jsc/%.cc
 	@g++ -o $@ -c $< ${JSC_CXX_FLAGS}
 
-test/v8/run: deps/v8 deps/gtest ${MNC_V8_OBJ} ${V8_TEST_OBJ}
-	@g++ -o test/v8/run ${MNC_V8_OBJ} ${V8_TEST_OBJ} ${V8_CXX_FLAGS}
+test/v8/run: deps/v8 deps/gtest ${MNC_V8_OBJ} ${V8_TEST_OBJ} ${CMN_TEST_V8_OBJ}
+	@g++ -o test/v8/run ${MNC_V8_OBJ} ${V8_TEST_OBJ} ${CMN_TEST_V8_OBJ} ${V8_CXX_FLAGS}
 
-test/jsc/run: deps/gtest ${MNC_JSC_OBJ} ${JSC_TEST_OBJ}
-	@g++ -o test/jsc/run ${MNC_JSC_OBJ} ${JSC_TEST_OBJ} ${JSC_CXX_FLAGS}
+test/jsc/run: deps/gtest ${MNC_JSC_OBJ} ${JSC_TEST_OBJ} ${CMN_TEST_JSC_OBJ}
+	@g++ -o test/jsc/run ${MNC_JSC_OBJ} ${JSC_TEST_OBJ} ${CMN_TEST_JSC_OBJ} ${JSC_CXX_FLAGS}
 
 test-jsc: test/jsc/run
 	@./test/jsc/run

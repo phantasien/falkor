@@ -1,7 +1,14 @@
 #include <gtest/gtest.h>
 #include <fcontext.h>
-#include "test-v8-common.h"
 
+
+#ifdef MNC_V8
+#include "v8/test-v8-common.h"
+#endif
+
+#ifdef MNC_JSC
+#include "jsc/test-jsc-common.h"
+#endif
 
 using namespace mnc;
 
