@@ -6,9 +6,6 @@
 
 #ifdef MNC_V8
 
-#include <v8.h>
-
-using namespace v8;
 
 namespace mnc {
 
@@ -25,3 +22,31 @@ int V8FunctionContext::ArgsCount() {
 
 #endif
 
+
+#ifdef MNC_JSC
+
+namespace mnc {
+
+JSCFunctionContext::JSCFunctionContext(
+    JSContextRef context_ref,
+    JSObjectRef function_ref,
+    JSObjectRef this_ref,
+    size_t argument_count,
+    const JSValueRef* arguments_ref,
+    JSValueRef* exception) {
+
+  context_ref_ = context_ref;
+  function_ref_ = function_ref;
+  this_ref_ = this_ref;
+  argument_count_ = argument_count;
+  arguments_ref_ = arguments_ref;
+  exception_ = exception;
+}
+
+int JSCFunctionContext::ArgsCount() {
+  return (int) argument_count_;
+}
+
+}
+
+#endif
