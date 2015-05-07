@@ -1,14 +1,32 @@
 #include "test-jsc-common.h"
 
+TestContext::TestContext() {}
 
-void runFunction(const char * bindName, JSValueRef (*func)(JSContextRef, JSObjectRef, JSObjectRef, size_t, const JSValueRef*, JSValueRef*), const char * rawSource) {
+void TestContext::AddFunction(const char * bindName, jsc_func func) {
+  func_def def;
+  def.bindName = bindName;
+  def.func = func;
+  functions_.push_back(def);
+}
+
+void TestContext::RunJS(const char * rawSource) {
+  JSStaticFunction staticFunctions[functions_.size() + 1];
+  JSStaticFunction endFunction = {0, 0, 0};
+
+  for (int index = 0; index < functions_.size(); index++) {
+    JSStaticFunction staticFunction = {
+      functions_.at(index).bindName,
+      functions_.at(index).func,
+      kJSPropertyAttributeNone
+    };
+
+    staticFunctions[index] = staticFunction;
+  }
+
+  staticFunctions[functions_.size()] = endFunction;
+
   JSStaticValue staticValues[] = {
       { 0, 0, 0, 0 }
-  };
-
-  JSStaticFunction staticFunctions[] = {
-      { bindName, func, kJSPropertyAttributeNone },
-      { 0, 0, 0 }
   };
 
   JSClassDefinition globalsDefinition = {

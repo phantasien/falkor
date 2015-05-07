@@ -2,21 +2,22 @@
 #include <functional>
 #include "test-v8-common.h"
 
-using namespace v8;
+static Isolate* isolate = Isolate::New();
+static Isolate::Scope isolatescope(isolate);
+static HandleScope handle_scope(isolate);
 
-void runFunction(const char * bindName, void (*func)(const v8::FunctionCallbackInfo<v8::Value>&), const char * rawSource) {
+TestContext::TestContext() {
   // Create a new Isolate and make it the current one.
-  Isolate* isolate = Isolate::New();
-  Isolate::Scope isolate_scope(isolate);
+  global_ = ObjectTemplate::New(isolate);
+}
 
-  HandleScope handle_scope(isolate);
+void TestContext::AddFunction(const char * bindName, void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
+  global_->Set(String::NewFromUtf8(isolate, bindName), FunctionTemplate::New(isolate, func));
+}
 
-  Handle<ObjectTemplate> global = ObjectTemplate::New(isolate);
-
-  global->Set(String::NewFromUtf8(isolate, bindName), FunctionTemplate::New(isolate, func));
-
+void TestContext::RunJS(const char * rawSource) {
   // Create a new context.
-  Local<Context> context = Context::New(isolate, NULL, global);
+  Local<Context> context = Context::New(isolate, NULL, global_);
 
   // Enter the context for compiling and running the hello world script.
   Context::Scope context_scope(context);
@@ -24,8 +25,5 @@ void runFunction(const char * bindName, void (*func)(const v8::FunctionCallbackI
   Local<String> source = String::NewFromUtf8(isolate, rawSource);
   Local<Script> script = Script::Compile(source);
 
-  Local<v8::Value> result = script->Run();
+  script->Run();
 }
-
-
-  

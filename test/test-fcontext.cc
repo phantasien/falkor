@@ -19,6 +19,8 @@ MNC_FUNC(CountArgs) {
 }
 
 TEST(V8FunctionContext, CountArgs) {
-  runFunction("countArgs", WrapCountArgs, "countArgs(1, null, false)");
+  TestContext testContext;
+  testContext.AddFunction("countArgs", WrapCountArgs);
+  testContext.RunJS("countArgs(1, null, false)");
   EXPECT_EQ(3, argsCount);
 }
