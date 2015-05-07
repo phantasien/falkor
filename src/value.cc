@@ -55,7 +55,7 @@ v8::Local<v8::Value> Value::Extract() {
   v8::Local<v8::Value> result;
 
   if (IsNumber()) {
-    result = v8::Number::New(MoonChild::isolate, 1);
+    result = v8::Number::New(MoonChild::isolate, ((Value *) this)->NumberValue());
   }
 
   return result;
@@ -80,6 +80,17 @@ Value* Value::Create(JSContextRef context_ref, JSValueRef jsc_value, JSValueRef*
   return result;
 }
 
+JSValueRef Value::Extract(JSContextRef context_ref) {
+  JSValueRef result;
+
+  if(IsNumber()) {
+      result = JSValueMakeNumber(context_ref, ((Value *) this)->NumberValue());
+  } else {
+      result = JSValueMakeNull(context_ref);
+  }
+
+  return result;
+}
 
 }
 

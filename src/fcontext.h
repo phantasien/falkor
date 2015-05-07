@@ -64,6 +64,8 @@ class JSCFunctionContext : FunctionContext {
     JSCFunctionContext(JSContextRef, JSObjectRef, JSObjectRef, size_t, const JSValueRef*, JSValueRef*);
     int ArgsCount();
     Value* GetArgument(int);
+    void SetResult(Value&);
+    JSValueRef ResultRef();
 
   private:
     JSContextRef context_ref_;
@@ -72,6 +74,7 @@ class JSCFunctionContext : FunctionContext {
     size_t argument_count_;
     const JSValueRef* arguments_ref_;
     JSValueRef* exception_ref_;
+    JSValueRef result_ref_;
 };
 
 #define MNC_FUNC(FuncName) \
@@ -92,8 +95,7 @@ JSValueRef WRAP_FUNC_NAME(FuncName)( \
     exception_ref \
   ); \
   FuncName(ctx); \
-  delete ctx; \
-  return NULL; \
+  return ctx->ResultRef(); \
 } \
 void FuncName(mnc::JSCFunctionContext* ctx)
 

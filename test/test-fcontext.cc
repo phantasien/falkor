@@ -54,7 +54,7 @@ TEST(V8FunctionContext, Add) {
   TestContext testContext;
   testContext.AddFunction("add", WrapAdd);
   testContext.AddFunction("collectResult", WrapCollectResult);
-  testContext.RunJS("collectResult(2)");
+  testContext.RunJS("collectResult(add(1, 1))");
   EXPECT_EQ(true, result->IsNumber());
 
   if (result->IsNumber()) {

@@ -54,6 +54,7 @@ JSCFunctionContext::JSCFunctionContext(
   argument_count_ = argument_count;
   arguments_ref_ = arguments_ref;
   exception_ref_ = exception;
+  result_ref_ = JSValueMakeNull(context_ref);
 }
 
 int JSCFunctionContext::ArgsCount() {
@@ -68,6 +69,14 @@ Value* JSCFunctionContext::GetArgument(int index) {
   }
 
   return argument;
+}
+
+void JSCFunctionContext::SetResult(Value& val) {
+  result_ref_ = val.Extract(context_ref_);
+}
+
+JSValueRef JSCFunctionContext::ResultRef() {
+  return result_ref_;
 }
 
 }

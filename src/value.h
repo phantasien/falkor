@@ -33,6 +33,7 @@ class Value {
 
 #ifdef MNC_JSC
     static Value* Create(JSContextRef, JSValueRef, JSValueRef*);
+    JSValueRef Extract(JSContextRef);
 #endif
 
 
