@@ -48,7 +48,7 @@ typedef struct t_func_def {
 } func_def;
 
 typedef struct t_obj_def {
-  void (*obj_generator)(mnc::JSCObjectContext*);
+  JSObjectRef object_ref;
   const char * export_name;
 } obj_def;
 

@@ -54,7 +54,7 @@ void JSCObjectContext::Export(const char * export_name, void (*obj_generator)(JS
   new_object_ctx->Build();
 
   def.export_name = export_name;
-  def.obj_generator = obj_generator;
+  def.object_ref = new_object_ctx->object_ref_;
   objects_.push_back(def);
 }
 
