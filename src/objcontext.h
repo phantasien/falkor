@@ -34,11 +34,6 @@ void ObjName(mnc::V8ObjectContext* ctx)
 
 #include <JavascriptCore/JavascriptCore.h>
 
-namespace mnc {
-
-class JSCObjectContext;
-
-}
 
 typedef JSValueRef (*jsc_func)(JSContextRef, JSObjectRef, JSObjectRef, size_t, const JSValueRef*, JSValueRef*);
 
@@ -47,26 +42,26 @@ typedef struct t_func_def {
   const char * export_name;
 } func_def;
 
-typedef struct t_obj_def {
-  JSObjectRef object_ref;
-  const char * export_name;
-} obj_def;
 
 namespace mnc {
+
 
 class JSCObjectContext {
   public:
     JSCObjectContext(JSContextRef);
     void Export(const char *, jsc_func);
     void Export(const char *, void (*)(JSCObjectContext*));
+    void Build(const char *);
+    JSObjectRef object_ref_;
 
   private:
     JSContextRef context_ref_;
-    JSObjectRef object_ref_;
     std::vector<func_def> functions_;
-    std::vector<obj_def> objects_;
-    void Build();
+    std::vector<JSCObjectContext*> objects_;
+    const char * name_;
+
 };
+
 
 }
 
