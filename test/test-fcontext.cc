@@ -10,19 +10,17 @@
 #include "jsc/test-jsc-common.h"
 #endif
 
-using namespace mnc;
-
 static int argsCount = 0;
-static Value* result = Value::Null;
+static mnc::Value* result = mnc::Value::Null;
 
 MNC_FUNC(CountArgs) {
   argsCount = ctx->ArgsCount();
 }
 
 MNC_FUNC(Add) {
-  double val1 = ((Number*)(ctx->GetArgument(0)))->NumberValue();
-  double val2 = ((Number*)(ctx->GetArgument(1)))->NumberValue();
-  Value* result = (Value*) new Number(2);
+  double val1 = ((mnc::Number*)(ctx->GetArgument(0)))->NumberValue();
+  double val2 = ((mnc::Number*)(ctx->GetArgument(1)))->NumberValue();
+  mnc::Value* result = (mnc::Value*) new mnc::Number(2);
 
   ctx->SetResult(*result);
 }
@@ -45,7 +43,7 @@ TEST(V8FunctionContext, RetreiveNumberArgument) {
   EXPECT_EQ(true, result->IsNumber());
 
   if (result->IsNumber()) {
-    EXPECT_EQ(1, ((Number*) result)->NumberValue());
+    EXPECT_EQ(1, ((mnc::Number*) result)->NumberValue());
   }
 }
 
@@ -57,6 +55,6 @@ TEST(V8FunctionContext, Add) {
   EXPECT_EQ(true, result->IsNumber());
 
   if (result->IsNumber()) {
-    EXPECT_EQ(2, ((Number*) result)->NumberValue());
+    EXPECT_EQ(2, ((mnc::Number*) result)->NumberValue());
   }
 }
