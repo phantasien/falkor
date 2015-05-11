@@ -18,6 +18,7 @@ class MoonChild {
 #endif
 
 #include "../src/fcontext.h"
+#include "../src/objcontext.h"
 #include "../src/value.h"
 
 #endif

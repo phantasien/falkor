@@ -10,8 +10,8 @@ TestContext::TestContext() {
   global_ = ObjectTemplate::New(MoonChild::isolate);
 }
 
-void TestContext::AddFunction(const char * bindName, void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
-  global_->Set(String::NewFromUtf8(MoonChild::isolate, bindName), FunctionTemplate::New(MoonChild::isolate, func));
+void TestContext::AddFunction(const char * export_name, void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
+  global_->Set(String::NewFromUtf8(MoonChild::isolate, export_name), FunctionTemplate::New(MoonChild::isolate, func));
 }
 
 void TestContext::RunJS(const char * rawSource) {

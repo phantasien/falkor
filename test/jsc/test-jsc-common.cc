@@ -2,9 +2,9 @@
 
 TestContext::TestContext() {}
 
-void TestContext::AddFunction(const char * bindName, jsc_func func) {
+void TestContext::AddFunction(const char * export_name, jsc_func func) {
   func_def def;
-  def.bindName = bindName;
+  def.export_name = export_name;
   def.func = func;
   functions_.push_back(def);
 }
@@ -15,7 +15,7 @@ void TestContext::RunJS(const char * rawSource) {
 
   for (int index = 0; index < functions_.size(); index++) {
     JSStaticFunction staticFunction = {
-      functions_.at(index).bindName,
+      functions_.at(index).export_name,
       functions_.at(index).func,
       kJSPropertyAttributeNone
     };

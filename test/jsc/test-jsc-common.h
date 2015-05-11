@@ -1,21 +1,16 @@
 #ifndef TEST_JSC_COMMON
 #define TEST_JSC_COMMON
 
+#include <mnc.h>
+
 #include <JavascriptCore/JavascriptCore.h>
 #include <vector>
-
-typedef JSValueRef (*jsc_func)(JSContextRef, JSObjectRef, JSObjectRef, size_t, const JSValueRef*, JSValueRef*);
-
-typedef struct t_func_def {
-  jsc_func func;
-  const char * bindName;
-} func_def;
 
 class TestContext {
 
   public:
     TestContext();
-    void AddFunction(const char * bindName, jsc_func);
+    void AddFunction(const char * export_name, jsc_func);
     void RunJS(const char *);
 
   private:
