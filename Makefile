@@ -80,9 +80,11 @@ test/jsc/run: deps/gtest ${MNC_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ}
 	@g++ -o test/jsc/run ${MNC_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ} ${JSC_CXX_FLAGS}
 
 test-jsc: test/jsc/run
+	@echo "Run JavascriptCore test suites ..."
 	@./test/jsc/run
 
 test-v8: test/v8/run
+	@echo "Run V8 test suites ..."
 	@./test/v8/run
 
 test: test-v8 test-jsc

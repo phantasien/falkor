@@ -33,14 +33,14 @@ MNC_FUNC(CollectResult) {
 
 TEST(V8FunctionContext, CountArgs) {
   TestContext testContext;
-  testContext.AddFunction("countArgs", WrapCountArgs);
+  testContext.AddFunction("countArgs", CountArgs);
   testContext.RunJS("countArgs(1, null, false)");
   EXPECT_EQ(3, argsCount);
 }
 
 TEST(V8FunctionContext, RetreiveNumberArgument) {
   TestContext testContext;
-  testContext.AddFunction("collectResult", WrapCollectResult);
+  testContext.AddFunction("collectResult", CollectResult);
   testContext.RunJS("collectResult(1)");
   EXPECT_EQ(true, result->IsNumber());
 
@@ -51,8 +51,8 @@ TEST(V8FunctionContext, RetreiveNumberArgument) {
 
 TEST(V8FunctionContext, Add) {
   TestContext testContext;
-  testContext.AddFunction("add", WrapAdd);
-  testContext.AddFunction("collectResult", WrapCollectResult);
+  testContext.AddFunction("add", Add);
+  testContext.AddFunction("collectResult", CollectResult);
   testContext.RunJS("collectResult(add(1, 1))");
   EXPECT_EQ(true, result->IsNumber());
 

@@ -15,7 +15,7 @@ class FunctionContext {
 
 }
 
-#define WRAP_FUNC_NAME(FuncName) Wrap ## FuncName
+#define WRAPPED_FUNC_NAME(FuncName) Wrapped ## FuncName
 
 
 #ifdef MNC_V8
@@ -40,13 +40,13 @@ class V8FunctionContext : FunctionContext {
 
 
 #define MNC_FUNC(FuncName) \
-void FuncName(V8FunctionContext* ctx); \
-void WRAP_FUNC_NAME(FuncName)(const v8::FunctionCallbackInfo<v8::Value>& infos) { \
+void WRAPPED_FUNC_NAME(FuncName)(V8FunctionContext* ctx); \
+void FuncName(const v8::FunctionCallbackInfo<v8::Value>& infos) { \
   V8FunctionContext* ctx = new V8FunctionContext(infos); \
-  FuncName(ctx); \
+  WRAPPED_FUNC_NAME(FuncName)(ctx); \
   delete ctx; \
 } \
-void FuncName(mnc::V8FunctionContext* ctx)
+void WRAPPED_FUNC_NAME(FuncName)(mnc::V8FunctionContext* ctx)
 
 
 #endif
@@ -78,8 +78,8 @@ class JSCFunctionContext : FunctionContext {
 };
 
 #define MNC_FUNC(FuncName) \
-void FuncName(JSCFunctionContext* ctx); \
-JSValueRef WRAP_FUNC_NAME(FuncName)( \
+void WRAPPED_FUNC_NAME(FuncName)(JSCFunctionContext* ctx); \
+JSValueRef FuncName( \
     JSContextRef context_ref, \
     JSObjectRef function_ref, \
     JSObjectRef this_ref, \
@@ -94,10 +94,10 @@ JSValueRef WRAP_FUNC_NAME(FuncName)( \
     arguments_ref, \
     exception_ref \
   ); \
-  FuncName(ctx); \
+  WRAPPED_FUNC_NAME(FuncName)(ctx); \
   return ctx->ResultRef(); \
 } \
-void FuncName(mnc::JSCFunctionContext* ctx)
+void WRAPPED_FUNC_NAME(FuncName)(mnc::JSCFunctionContext* ctx)
 
 }
 
