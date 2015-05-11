@@ -19,6 +19,12 @@ bool Value::IsUndefined() {
   return this == Value::Undefined;
 }
 
+RefValue::RefValue() : Value(REF) {}
+
+double RefValue::NumberValue() {
+  return -1;
+}
+
 Number::Number(double val) : Value(NUMBER) {
   val_ = val;
 }
@@ -27,8 +33,8 @@ double Number::NumberValue() {
   return val_;
 }
 
-Value* Value::Null = new Value(REF);
-Value* Value::Undefined = new Value(REF);
+Value* Value::Null = (Value*) new RefValue();
+Value* Value::Undefined = (Value*) new RefValue();
 
 }
 

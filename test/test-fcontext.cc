@@ -18,11 +18,11 @@ MNC_FUNC(CountArgs) {
 }
 
 MNC_FUNC(Add) {
-  double val1 = ((mnc::Number*)(ctx->GetArgument(0)))->NumberValue();
-  double val2 = ((mnc::Number*)(ctx->GetArgument(1)))->NumberValue();
-  mnc::Value* result = (mnc::Value*) new mnc::Number(2);
+  double val1 = ctx->GetArgument(0)->NumberValue();
+  double val2 = ctx->GetArgument(1)->NumberValue();
+  mnc::Number result(val1 + val2);
 
-  ctx->SetResult(*result);
+  ctx->SetResult((mnc::Value&) result);
 }
 
 MNC_FUNC(CollectResult) {

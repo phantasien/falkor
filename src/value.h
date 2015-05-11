@@ -24,6 +24,7 @@ class Value {
     bool IsNumber();
     bool IsNull();
     bool IsUndefined();
+    virtual double NumberValue() = 0;
 
 #ifdef MNC_V8
     static Value* Create(v8::Local<v8::Value>);
@@ -38,6 +39,12 @@ class Value {
 
   protected:
     Type type_;
+};
+
+class RefValue : Value {
+  public:
+    RefValue();
+    double NumberValue();
 };
 
 class Number : Value {
