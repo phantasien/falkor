@@ -30,7 +30,7 @@ using namespace v8;
 namespace mnc {
 
 V8ObjectContext::V8ObjectContext() {
-  obj_template_ = ObjectTemplate::New(MoonChild::isolate);
+  obj_template_ = ObjectTemplate::New(v8::Isolate::GetCurrent());
 }
 
 v8::Handle<v8::ObjectTemplate> V8ObjectContext::ObjectTemplate() {
@@ -41,8 +41,8 @@ void V8ObjectContext::Export(
     const char * export_name,
     void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
   obj_template_->Set(
-    String::NewFromUtf8(MoonChild::isolate, export_name),
-    FunctionTemplate::New(MoonChild::isolate, func));
+    String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
+    FunctionTemplate::New(v8::Isolate::GetCurrent(), func));
 }
 
 void V8ObjectContext::Export(
@@ -51,7 +51,7 @@ void V8ObjectContext::Export(
   V8ObjectContext new_object_ctx;
   obj_generator(&new_object_ctx);
   obj_template_->Set(
-    String::NewFromUtf8(MoonChild::isolate, export_name),
+    String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
     new_object_ctx.obj_template_);
 }
 

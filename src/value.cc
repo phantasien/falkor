@@ -77,7 +77,7 @@ v8::Local<v8::Value> Value::Extract() {
   v8::Local<v8::Value> result;
 
   if (IsNumber()) {
-    result = v8::Number::New(MoonChild::isolate, ((Number *) this)->NumberValue());
+    result = v8::Number::New(v8::Isolate::GetCurrent(), ((Number *) this)->NumberValue());
   }
 
   return result;

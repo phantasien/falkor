@@ -70,25 +70,25 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 using namespace v8;
 
 TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
-  Handle<ObjectTemplate> global = ObjectTemplate::New(MoonChild::isolate);
+  Handle<ObjectTemplate> global = ObjectTemplate::New(v8::Isolate::GetCurrent());
 
   V8ObjectContext* new_object_ctx = new V8ObjectContext();
   Wrapper(new_object_ctx);
 
   global->Set(
-    String::NewFromUtf8(MoonChild::isolate, "wrapper"),
+    String::NewFromUtf8(v8::Isolate::GetCurrent(), "wrapper"),
     new_object_ctx->ObjectTemplate()
   );
 
   // Create a new context.
-  Local<Context> context = Context::New(MoonChild::isolate, NULL, global);
+  Local<Context> context = Context::New(v8::Isolate::GetCurrent(), NULL, global);
 
   // Enter the context for compiling and running the hello world script.
   Context::Scope context_scope(context);
 
 
 
-  Local<String> source = String::NewFromUtf8(MoonChild::isolate, "wrapper.child.collect(42)");
+  Local<String> source = String::NewFromUtf8(v8::Isolate::GetCurrent(), "wrapper.child.collect(42)");
   Local<Script> script = Script::Compile(source);
 
   script->Run();
