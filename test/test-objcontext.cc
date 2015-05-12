@@ -28,6 +28,8 @@ MNC_OBJ(Wrapper) {
   ctx->Export("child", Child); 
 }
 
+#ifdef MNC_JSC
+
 TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 
   JSStaticValue staticValues[] = {
@@ -60,3 +62,37 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 
   EXPECT_EQ(42, result->NumberValue());
 }
+
+#endif
+
+#ifdef MNC_V8
+
+using namespace v8;
+
+TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
+  Handle<ObjectTemplate> global = ObjectTemplate::New(MoonChild::isolate);
+
+  V8ObjectContext* new_object_ctx = new V8ObjectContext();
+  Wrapper(new_object_ctx);
+
+  global->Set(
+    String::NewFromUtf8(MoonChild::isolate, "wrapper"),
+    new_object_ctx->ObjectTemplate()
+  );
+
+  // Create a new context.
+  Local<Context> context = Context::New(MoonChild::isolate, NULL, global);
+
+  // Enter the context for compiling and running the hello world script.
+  Context::Scope context_scope(context);
+
+
+
+  Local<String> source = String::NewFromUtf8(MoonChild::isolate, "wrapper.child.collect(42)");
+  Local<Script> script = Script::Compile(source);
+
+  script->Run();
+  EXPECT_EQ(42, result->NumberValue());
+}
+
+#endif

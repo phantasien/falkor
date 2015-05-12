@@ -13,6 +13,10 @@ V8ObjectContext::V8ObjectContext() {
   obj_template_ = ObjectTemplate::New(MoonChild::isolate);
 }
 
+v8::Handle<v8::ObjectTemplate> V8ObjectContext::ObjectTemplate() {
+  return obj_template_;
+}
+
 void V8ObjectContext::Export(const char * export_name, void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
   obj_template_->Set(
     String::NewFromUtf8(MoonChild::isolate, export_name),

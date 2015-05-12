@@ -15,6 +15,7 @@ class V8ObjectContext {
     V8ObjectContext();
     void Export(const char *, void (*)(const v8::FunctionCallbackInfo<v8::Value>&));
     void Export(const char *, void (*)(V8ObjectContext*));
+    v8::Handle<v8::ObjectTemplate> ObjectTemplate();
 
   private:
     v8::Handle<v8::ObjectTemplate> obj_template_;
