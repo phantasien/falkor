@@ -1,3 +1,23 @@
+// Copyright David Corticchiato
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+
 #include "mnc.h"
 #include "objcontext.h"
 
@@ -17,23 +37,25 @@ v8::Handle<v8::ObjectTemplate> V8ObjectContext::ObjectTemplate() {
   return obj_template_;
 }
 
-void V8ObjectContext::Export(const char * export_name, void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
+void V8ObjectContext::Export(
+    const char * export_name,
+    void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
   obj_template_->Set(
     String::NewFromUtf8(MoonChild::isolate, export_name),
-    FunctionTemplate::New(MoonChild::isolate, func)
-  );
+    FunctionTemplate::New(MoonChild::isolate, func));
 }
 
-void V8ObjectContext::Export(const char * export_name, void (*obj_generator)(V8ObjectContext*)) {
+void V8ObjectContext::Export(
+    const char * export_name,
+    void (*obj_generator)(V8ObjectContext*)) {
   V8ObjectContext new_object_ctx;
   obj_generator(&new_object_ctx);
   obj_template_->Set(
     String::NewFromUtf8(MoonChild::isolate, export_name),
-    new_object_ctx.obj_template_
-  );
+    new_object_ctx.obj_template_);
 }
 
-}
+}  // namespace mnc
 
 
 #endif
@@ -53,36 +75,37 @@ void JSCObjectContext::Export(const char * export_name, jsc_func func) {
   functions_.push_back(def);
 }
 
-void JSCObjectContext::Export(const char * export_name, void (*obj_generator)(JSCObjectContext*)) {
+void JSCObjectContext::Export(
+    const char * export_name,
+    void (*obj_generator)(JSCObjectContext*)) {
   JSCObjectContext* new_object_ctx = new JSCObjectContext(context_ref_);
   obj_generator(new_object_ctx);
   new_object_ctx->Build(export_name);
-
   objects_.push_back(new_object_ctx);
 }
 
 void JSCObjectContext::Build(const char * name) {
-  JSStaticFunction staticFunctions[functions_.size() + 1];
-  JSStaticValue staticValues[] = {
+  JSStaticFunction static_functions[functions_.size() + 1];
+  JSStaticValue static_variables[] = {
     { 0, 0, 0, 0 }
   };
 
-  JSStaticFunction endFunction = {0, 0, 0};
+  JSStaticFunction end_function = {0, 0, 0};
 
   name_ = name;
 
   for (int index = 0; index < functions_.size(); index++) {
-    JSStaticFunction staticFunction;
+    JSStaticFunction static_function;
 
-    staticFunction.name = functions_.at(index).export_name;
-    staticFunction.callAsFunction = functions_.at(index).func;
-    staticFunctions[index] = staticFunction;
+    static_function.name = functions_.at(index).export_name;
+    static_function.callAsFunction = functions_.at(index).func;
+    static_functions[index] = static_function;
   }
 
-  staticFunctions[functions_.size()] = endFunction;
+  static_functions[functions_.size()] = end_function;
 
   JSClassDefinition class_definition = {
-      0, kJSClassAttributeNone, name, 0, staticValues, staticFunctions,
+      0, kJSClassAttributeNone, name, 0, static_variables, static_functions,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
   };
 
@@ -101,6 +124,6 @@ void JSCObjectContext::Build(const char * name) {
   }
 }
 
-}
+}  // namespace mnc
 
 #endif

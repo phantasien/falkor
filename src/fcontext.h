@@ -1,3 +1,23 @@
+// Copyright David Corticchiato
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+
 #ifndef MNC_FCONTEXT
 #define MNC_FCONTEXT
 
@@ -7,10 +27,10 @@
 namespace mnc {
 
 class FunctionContext {
-  public:
+ public:
     virtual int ArgsCount() = 0;
-    virtual Value* GetArgument(int) = 0;
-    virtual void SetResult(Value&) = 0;
+    virtual Value* GetArgument(int index) = 0;
+    virtual void SetResult(Value& result) = 0;
 };
 
 }
@@ -26,17 +46,17 @@ class FunctionContext {
 namespace mnc {
 
 class V8FunctionContext : FunctionContext {
-  public:
-    V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>&);
+ public:
+    explicit V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>&);
     int ArgsCount();
-    Value* GetArgument(int);
-    void SetResult(Value&);
+    Value* GetArgument(int index);
+    void SetResult(Value& result);
 
-  private:
+ private:
     const v8::FunctionCallbackInfo<v8::Value>* infos_;
 };
 
-}
+}  // namespace mnc
 
 
 #define MNC_FUNC(FuncName) \
@@ -59,15 +79,20 @@ void WRAPPED_FUNC_NAME(FuncName)(mnc::V8FunctionContext* ctx)
 namespace mnc {
 
 class JSCFunctionContext : FunctionContext {
-
-  public:
-    JSCFunctionContext(JSContextRef, JSObjectRef, JSObjectRef, size_t, const JSValueRef*, JSValueRef*);
+ public:
+    JSCFunctionContext(
+      JSContextRef,
+      JSObjectRef,
+      JSObjectRef,
+      size_t,
+      const JSValueRef*,
+      JSValueRef*);
     int ArgsCount();
-    Value* GetArgument(int);
-    void SetResult(Value&);
+    Value* GetArgument(int index);
+    void SetResult(Value& result);
     JSValueRef ResultRef();
 
-  private:
+ private:
     JSContextRef context_ref_;
     JSObjectRef function_ref_;
     JSObjectRef this_ref_;
@@ -92,14 +117,13 @@ JSValueRef FuncName( \
     this_ref, \
     argument_count, \
     arguments_ref, \
-    exception_ref \
-  ); \
+    exception_ref); \
   WRAPPED_FUNC_NAME(FuncName)(ctx); \
   return ctx->ResultRef(); \
 } \
 void WRAPPED_FUNC_NAME(FuncName)(mnc::JSCFunctionContext* ctx)
 
-}
+}  // namespace mnc
 
 #endif
 

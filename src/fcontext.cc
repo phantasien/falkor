@@ -1,3 +1,23 @@
+// Copyright David Corticchiato
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+// OR OTHER DEALINGS IN THE SOFTWARE.
+
 #include <cstddef>
 
 #include "fcontext.h"
@@ -8,7 +28,8 @@
 
 namespace mnc {
 
-V8FunctionContext::V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>& infos) {
+V8FunctionContext::V8FunctionContext(
+  const v8::FunctionCallbackInfo<v8::Value>& infos) {
   infos_ = &infos;
 }
 
@@ -26,12 +47,12 @@ Value* V8FunctionContext::GetArgument(int index) {
   return argument;
 }
 
-void V8FunctionContext::SetResult(Value& val) {
-  infos_->GetReturnValue().Set(val.Extract());
+void V8FunctionContext::SetResult(Value& result) {
+  infos_->GetReturnValue().Set(result.Extract());
 }
 
 
-}
+}  // namespace mnc
 
 #endif
 
@@ -58,14 +79,17 @@ JSCFunctionContext::JSCFunctionContext(
 }
 
 int JSCFunctionContext::ArgsCount() {
-  return (int) argument_count_;
+  return static_cast<int>(argument_count_);
 }
 
 Value* JSCFunctionContext::GetArgument(int index) {
   Value * argument = Value::Null;
 
   if (argument_count_ > index) {
-    argument = Value::Create(context_ref_, arguments_ref_[index], exception_ref_);
+    argument = Value::Create(
+      context_ref_,
+      arguments_ref_[index],
+      exception_ref_);
   }
 
   return argument;
@@ -79,6 +103,6 @@ JSValueRef JSCFunctionContext::ResultRef() {
   return result_ref_;
 }
 
-}
+}  // namespace mnc
 
 #endif

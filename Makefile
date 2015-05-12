@@ -2,6 +2,7 @@ CURDIR := $(shell pwd)
 
 lowercase = $(shell echo $1 | tr A-Z a-z)
 
+MNC_HEADERS := $(shell find src -name "*.h")
 MNC_SRC := $(shell find src -name "*.cc")
 MNC_V8_OBJ := $(foreach src,${MNC_SRC}, $(subst .cc,.v8.o,$(src)))
 MNC_JSC_OBJ := $(foreach src,${MNC_SRC}, $(subst .cc,.jsc.o,$(src)))
@@ -89,6 +90,9 @@ test-v8: test/v8/run
 
 test: test-v8 test-jsc
 
+lint:
+	@python deps/cpplint.py --filter=-build/header_guard,-build/include ${MNC_SRC} ${MNC_HEADERS}
+
 deps/v8:
 	@mkdir -p deps
 	@git clone --depth=1 https://github.com/phantasien/v8 deps/v8
@@ -103,6 +107,9 @@ deps/gtest.zip:
 	@mv deps/gtest-1.7.0 deps/gtest
 	@mkdir deps/gtest/cbuild
 	@cd deps/gtest/cbuild && cmake -G"Unix Makefiles" ${SYS_CMAKE_FLAGS} .. && make
+
+deps/cpplint.py:
+	@-curl -L https://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py > deps/cpplint.py
 
 .PHONY: test
 
