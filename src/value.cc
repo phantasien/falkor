@@ -18,10 +18,15 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "value.h"
-#include "../include/mnc.h"
+#include "src/value.h"
+
 
 namespace mnc {
+
+//
+// Common Value
+//
+
 
 Value::Value(Type type) {
   type_ = type;
@@ -39,11 +44,21 @@ bool Value::IsUndefined() {
   return this == Value::Undefined;
 }
 
+//
+// Common RefValue
+//
+
+
 RefValue::RefValue() : Value(REF) {}
 
 double RefValue::NumberValue() {
   return -1;
 }
+
+//
+// Common Number
+//
+
 
 Number::Number(double val) : Value(NUMBER) {
   val_ = val;
@@ -53,21 +68,21 @@ double Number::NumberValue() {
   return val_;
 }
 
-Value* Value::Null = (Value*) new RefValue();
-Value* Value::Undefined = (Value*) new RefValue();
+Value* Value::Null = reinterpret_cast<Value*>(new RefValue());
+Value* Value::Undefined = reinterpret_cast<Value*>(new RefValue());
 
-}  // namespace mnc
+//
+// V8 Value
+//
 
 
 #ifdef MNC_V8
-
-namespace mnc {
 
 Value* Value::Create(v8::Local<v8::Value> v8_value) {
   Value* result = Value::Null;
 
   if (v8_value->IsNumber()) {
-    result = (Value*) new Number(v8_value->NumberValue());
+    result = reinterpret_cast<Value*>(new Number(v8_value->NumberValue()));
   }
 
   return result;
@@ -77,26 +92,34 @@ v8::Local<v8::Value> Value::Extract() {
   v8::Local<v8::Value> result;
 
   if (IsNumber()) {
-    result = v8::Number::New(v8::Isolate::GetCurrent(), ((Number *) this)->NumberValue());
+    result = v8::Number::New(
+      v8::Isolate::GetCurrent(),
+      NumberValue());
   }
 
   return result;
 }
 
-}  // namespace mnc
-
 #endif
+
+//
+// JavascriptCore Value
+//
 
 
 #ifdef MNC_JSC
 
-namespace mnc {
-
-Value* Value::Create(JSContextRef context_ref, JSValueRef jsc_value, JSValueRef* exception_ref) {
+Value* Value::Create(
+    JSContextRef context_ref,
+    JSValueRef jsc_value,
+    JSValueRef* exception_ref) {
   Value* result = Value::Null;
 
   if (JSValueIsNumber(context_ref, jsc_value)) {
-    result = (Value*) new Number(JSValueToNumber(context_ref, jsc_value, exception_ref));
+    result = reinterpret_cast<Value*>(new Number(JSValueToNumber(
+      context_ref,
+      jsc_value,
+      exception_ref)));
   }
 
   return result;
@@ -105,8 +128,8 @@ Value* Value::Create(JSContextRef context_ref, JSValueRef jsc_value, JSValueRef*
 JSValueRef Value::Extract(JSContextRef context_ref) {
   JSValueRef result;
 
-  if(IsNumber()) {
-      result = JSValueMakeNumber(context_ref, ((Number *) this)->NumberValue());
+  if (IsNumber()) {
+      result = JSValueMakeNumber(context_ref, NumberValue());
   } else {
       result = JSValueMakeNull(context_ref);
   }

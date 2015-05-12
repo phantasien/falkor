@@ -18,8 +18,8 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef MNC_VALUE
-#define MNC_VALUE
+#ifndef MNC_VALUE_H_
+#define MNC_VALUE_H_
 
 #ifdef MNC_V8
 #include <v8.h>
@@ -33,14 +33,12 @@
 namespace mnc {
 
 class Value {
-
  public:
     enum Type {REF, NUMBER, STRING};
 
     static Value* Null;
     static Value* Undefined;
 
-    Value(Type);
     bool IsNumber();
     bool IsNull();
     bool IsUndefined();
@@ -52,10 +50,12 @@ class Value {
 #endif
 
 #ifdef MNC_JSC
-    static Value* Create(JSContextRef, JSValueRef, JSValueRef*);
+    static Value* Create(
+        JSContextRef context_ref,
+        JSValueRef jsc_value,
+        JSValueRef* exception_ref);
     JSValueRef Extract(JSContextRef);
 #endif
-
 
  protected:
     Type type_;
@@ -68,15 +68,14 @@ class RefValue : Value {
 };
 
 class Number : Value {
-
  public:
-    Number(double);
+    explicit Number(double val);
     double NumberValue();
 
- public:
+ private:
     double val_;
 };
 
 }  // namespace mnc
 
-#endif
+#endif  // MNC_VALUE_H_
