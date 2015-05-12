@@ -38,13 +38,6 @@ void V8ObjectContext::Export(const char * export_name, void (*obj_generator)(V8O
 
 namespace mnc {
 
-static JSValueRef GetObject(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName, JSValueRef *exception) {
-  std::cout << "Retreived object" << (long) object << std::endl;
-
-  return object;
-}
-
-
 JSCObjectContext::JSCObjectContext(JSContextRef context_ref) {
   context_ref_ = context_ref;
 }
@@ -59,15 +52,18 @@ void JSCObjectContext::Export(const char * export_name, jsc_func func) {
 void JSCObjectContext::Export(const char * export_name, void (*obj_generator)(JSCObjectContext*)) {
   JSCObjectContext* new_object_ctx = new JSCObjectContext(context_ref_);
   obj_generator(new_object_ctx);
+  new_object_ctx->Build(export_name);
 
   objects_.push_back(new_object_ctx);
 }
 
 void JSCObjectContext::Build(const char * name) {
   JSStaticFunction staticFunctions[functions_.size() + 1];
-  JSStaticValue staticValues[objects_.size() + 1];
+  JSStaticValue staticValues[] = {
+    { 0, 0, 0, 0 }
+  };
+
   JSStaticFunction endFunction = {0, 0, 0};
-  JSStaticValue endValue = {0, 0, 0, 0};
 
   name_ = name;
 
@@ -81,17 +77,6 @@ void JSCObjectContext::Build(const char * name) {
 
   staticFunctions[functions_.size()] = endFunction;
 
-  for (int index = 0; index < objects_.size(); index++) {
-    JSStaticValue staticValue;
-
-    staticValue.name = objects_.at(index)->name_;
-    staticValue.getProperty = GetObject;
-
-    staticValues[index] = staticValue;
-  }
-
-  staticValues[objects_.size()] = endValue;
-
   JSClassDefinition class_definition = {
       0, kJSClassAttributeNone, name, 0, staticValues, staticFunctions,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -100,7 +85,16 @@ void JSCObjectContext::Build(const char * name) {
   JSClassRef class_ref = JSClassCreate(&class_definition);
   object_ref_ = JSObjectMake(context_ref_, class_ref, NULL);
 
-  std::cout << "Generated object" << (long) object_ref_ << std::endl;
+  for (int index = 0; index < objects_.size(); index++) {
+    JSObjectSetProperty(
+      context_ref_,
+      object_ref_,
+      JSStringCreateWithUTF8CString(objects_.at(index)->name_),
+      objects_.at(index)->object_ref_,
+      NULL,
+      0
+    );
+  }
 }
 
 }

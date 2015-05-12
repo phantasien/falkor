@@ -14,34 +14,31 @@
 
 using namespace mnc;
 
+static mnc::Value* result = mnc::Value::Null;
 
-MNC_FUNC(ConsoleLog) {
-  std::cout << ctx->GetArgument(0)->NumberValue();
-
-  for (int index = 1; index < ctx->ArgsCount(); ++index) {
-    std::cout << " " << ctx->GetArgument(index)->NumberValue();
-  }
-
-  std::cout << std::endl;
+MNC_FUNC(CollectMyResult) {
+  result = ctx->GetArgument(0);
 }
 
-MNC_OBJ(Console) {
-  ctx->Export("log", ConsoleLog);
+MNC_OBJ(Child) {
+  ctx->Export("collect", CollectMyResult);
 }
 
-JSCObjectContext* new_object_ctx;
+MNC_OBJ(Wrapper) {
+  ctx->Export("child", Child); 
+}
 
+static JSCObjectContext* new_object_ctx;
 
 static JSValueRef GetObject(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName, JSValueRef *exception) {
   return new_object_ctx->object_ref_;
 }
 
-
 TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 
   JSStaticValue staticValue;
 
-  staticValue.name = "console";
+  staticValue.name = "wrapper";
   staticValue.getProperty = GetObject;
 
   JSStaticValue staticValues[] = {
@@ -62,12 +59,13 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
   JSContextRef ctx = JSGlobalContextCreate(globals);
 
   new_object_ctx = new JSCObjectContext(ctx);
-  Console(new_object_ctx);
+  Wrapper(new_object_ctx);
 
-  new_object_ctx->Build("console");
+  new_object_ctx->Build("wrapper");
 
- 
-  JSStringRef script = JSStringCreateWithUTF8CString("console.log(1, 2, 3, 4, 5)");
+  JSStringRef script = JSStringCreateWithUTF8CString("wrapper.child.collect(42)");
   JSValueRef exception = NULL;
-  JSValueRef result = JSEvaluateScript(ctx, script, NULL, NULL, 1, &exception);
+  JSEvaluateScript(ctx, script, NULL, NULL, 1, &exception);
+
+  EXPECT_EQ(42, result->NumberValue());
 }
