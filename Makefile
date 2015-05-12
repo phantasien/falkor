@@ -93,7 +93,7 @@ test-v8: test/v8/run
 test: test-v8 test-jsc
 
 lint:
-	@python deps/cpplint.py --filter=-build/header_guard,-build/include ${MNC_SRC} ${MNC_HEADERS}
+	@python deps/cpplint.py --root=src --slug=mnc ${MNC_SRC} ${MNC_HEADERS}
 
 deps/v8:
 	@mkdir -p deps
@@ -109,9 +109,6 @@ deps/gtest.zip:
 	@mv deps/gtest-1.7.0 deps/gtest
 	@mkdir deps/gtest/cbuild
 	@cd deps/gtest/cbuild && cmake -G"Unix Makefiles" ${SYS_CMAKE_FLAGS} .. && make
-
-deps/cpplint.py:
-	@-curl -L https://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py > deps/cpplint.py
 
 .PHONY: test
 
