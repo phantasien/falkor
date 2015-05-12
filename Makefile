@@ -31,7 +31,8 @@ else
 endif
 
 
-V8_CXX_FLAGS := -I${CURDIR}/include \
+V8_CXX_FLAGS := -I${CURDIR} \
+    -I${CURDIR}/include \
     -I${CURDIR}/deps/gtest/include \
     -I${CURDIR}/deps/v8/include \
     -DMNC_V8 \
@@ -42,7 +43,8 @@ V8_CXX_FLAGS := -I${CURDIR}/include \
     -lgtest -lgtest_main -lpthread \
     -lv8_base -lv8_libbase -lv8_snapshot -lv8_libplatform
 
-JSC_CXX_FLAGS := -I${CURDIR}/include \
+JSC_CXX_FLAGS := -I${CURDIR} \
+    -I${CURDIR}/include \
     -I${CURDIR}/deps/gtest/include \
     -DMNC_JSC \
     -w \

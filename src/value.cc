@@ -28,10 +28,6 @@ namespace mnc {
 //
 
 
-Value::Value(Type type) {
-  type_ = type;
-}
-
 bool Value::IsNumber() {
   return type_ == NUMBER;
 }
@@ -49,7 +45,9 @@ bool Value::IsUndefined() {
 //
 
 
-RefValue::RefValue() : Value(REF) {}
+RefValue::RefValue() {
+  type_ = REF;
+}
 
 double RefValue::NumberValue() {
   return -1;
@@ -60,7 +58,8 @@ double RefValue::NumberValue() {
 //
 
 
-Number::Number(double val) : Value(NUMBER) {
+Number::Number(double val) {
+  type_ = NUMBER;
   val_ = val;
 }
 
@@ -137,6 +136,6 @@ JSValueRef Value::Extract(JSContextRef context_ref) {
   return result;
 }
 
-}  // namespace mnc
-
 #endif
+
+}  // namespace mnc
