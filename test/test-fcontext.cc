@@ -42,11 +42,7 @@ TEST(FUNCTION_CONTEXT_TEST_SUITE, RetreiveNumberArgument) {
   TestContext testContext;
   testContext.AddFunction("collectResult", CollectResult);
   testContext.RunJS("collectResult(1)");
-  EXPECT_EQ(true, result->IsNumber());
-
-  if (result->IsNumber()) {
-    EXPECT_EQ(1, ((mnc::Number*) result)->NumberValue());
-  }
+  EXPECT_EQ(1, ((mnc::Number*) result)->NumberValue());
 }
 
 TEST(FUNCTION_CONTEXT_TEST_SUITE, Add) {
@@ -54,9 +50,5 @@ TEST(FUNCTION_CONTEXT_TEST_SUITE, Add) {
   testContext.AddFunction("add", Add);
   testContext.AddFunction("collectResult", CollectResult);
   testContext.RunJS("collectResult(add(1, 1))");
-  EXPECT_EQ(true, result->IsNumber());
-
-  if (result->IsNumber()) {
-    EXPECT_EQ(2, ((mnc::Number*) result)->NumberValue());
-  }
+  EXPECT_EQ(2, ((mnc::Number*) result)->NumberValue());
 }
