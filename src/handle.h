@@ -18,12 +18,12 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef MNC_HANDLE_H_
-#define MNC_HANDLE_H_
+#ifndef BASTIAN_HANDLE_H_
+#define BASTIAN_HANDLE_H_
 
 #include <cstdlib>
 
-namespace mnc {
+namespace bastian {
 
 template<class ResourceType>
 class Handle {
@@ -58,7 +58,7 @@ class Handle {
   ResourceType * resource_;
 };
 
-}  // namespace mnc
+}  // namespace bastian
 
 
-#endif  // MNC_HANDLE_H_
+#endif  // BASTIAN_HANDLE_H_

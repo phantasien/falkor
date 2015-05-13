@@ -2,8 +2,8 @@
 
 TestContext::TestContext() {}
 
-void TestContext::AddFunction(const char * export_name, mnc::jsc_func func) {
-  mnc::func_def def;
+void TestContext::AddFunction(const char * export_name, bastian::jsc_func func) {
+  bastian::func_def def;
   def.export_name = export_name;
   def.func = func;
   functions_.push_back(def);

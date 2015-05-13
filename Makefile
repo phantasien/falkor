@@ -2,10 +2,10 @@ CURDIR := $(shell pwd)
 
 lowercase = $(shell echo $1 | tr A-Z a-z)
 
-MNC_HEADERS := $(shell find src -name "*.h")
-MNC_SRC := $(shell find src -name "*.cc")
-MNC_V8_OBJ := $(foreach src,${MNC_SRC}, $(subst .cc,.v8.o,$(src)))
-MNC_JSC_OBJ := $(foreach src,${MNC_SRC}, $(subst .cc,.jsc.o,$(src)))
+BASTIAN_HEADERS := $(shell find src -name "*.h")
+BASTIAN_SRC := $(shell find src -name "*.cc")
+BASTIAN_V8_OBJ := $(foreach src,${BASTIAN_SRC}, $(subst .cc,.v8.o,$(src)))
+BASTIAN_JSC_OBJ := $(foreach src,${BASTIAN_SRC}, $(subst .cc,.jsc.o,$(src)))
 
 V8_TEST_SRC := $(shell find test/v8 -name "*.cc")
 V8_TEST_OBJ := $(foreach src,${V8_TEST_SRC}, $(subst .cc,.o,$(src)))
@@ -35,7 +35,7 @@ V8_CXX_FLAGS := -I${CURDIR} \
     -I${CURDIR}/include \
     -I${CURDIR}/deps/gtest/include \
     -I${CURDIR}/deps/v8/include \
-    -DMNC_V8 \
+    -DBASTIAN_V8 \
     -w \
     -L${CURDIR}/deps/gtest/cbuild \
     -L${V8_LIBS_PATH} \
@@ -46,7 +46,7 @@ V8_CXX_FLAGS := -I${CURDIR} \
 JSC_CXX_FLAGS := -I${CURDIR} \
     -I${CURDIR}/include \
     -I${CURDIR}/deps/gtest/include \
-    -DMNC_JSC \
+    -DBASTIAN_JSC \
     -w \
     -L${CURDIR}/deps/gtest/cbuild \
     ${SYS_CXX_FLAGS} \
@@ -76,11 +76,11 @@ test/v8/%.o: test/v8/%.cc
 test/jsc/%.o: test/jsc/%.cc
 	@g++ -o $@ -c $< ${JSC_CXX_FLAGS}
 
-test/v8/run: deps/v8 deps/gtest ${MNC_V8_OBJ} ${V8_TEST_OBJ} ${TEST_SUITE_V8_OBJ}
-	@g++ -o test/v8/run ${MNC_V8_OBJ} ${V8_TEST_OBJ} ${TEST_SUITE_V8_OBJ} ${V8_CXX_FLAGS}
+test/v8/run: deps/v8 deps/gtest ${BASTIAN_V8_OBJ} ${V8_TEST_OBJ} ${TEST_SUITE_V8_OBJ}
+	@g++ -o test/v8/run ${BASTIAN_V8_OBJ} ${V8_TEST_OBJ} ${TEST_SUITE_V8_OBJ} ${V8_CXX_FLAGS}
 
-test/jsc/run: deps/gtest ${MNC_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ}
-	@g++ -o test/jsc/run ${MNC_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ} ${JSC_CXX_FLAGS}
+test/jsc/run: deps/gtest ${BASTIAN_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ}
+	@g++ -o test/jsc/run ${BASTIAN_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ} ${JSC_CXX_FLAGS}
 
 test-jsc: test/jsc/run
 	@echo "Run JavascriptCore test suites ..."
@@ -93,7 +93,7 @@ test-v8: test/v8/run
 test: test-v8 test-jsc
 
 lint:
-	@python deps/cpplint.py --root=src --slug=mnc ${MNC_SRC} ${MNC_HEADERS}
+	@python deps/cpplint.py --root=src --slug=mnc ${BASTIAN_SRC} ${BASTIAN_HEADERS}
 
 deps/v8:
 	@mkdir -p deps

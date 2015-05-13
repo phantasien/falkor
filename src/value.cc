@@ -21,7 +21,7 @@
 #include "src/value.h"
 
 
-namespace mnc {
+namespace bastian {
 
 //
 // Common Value
@@ -84,10 +84,10 @@ double Number::NumberValue() {
 //
 
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 
 Handle<Value> Value::New(const v8::Local<v8::Value>& v8_value) {
-    Handle<Value> result = mnc::NullValue::New();
+    Handle<Value> result = bastian::NullValue::New();
 
   if (v8_value->IsNumber()) {
     result = Number::New(v8_value->NumberValue());
@@ -115,7 +115,7 @@ v8::Local<v8::Value> Value::Extract() {
 //
 
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 
 Handle<Value> Value::New(
     JSContextRef context_ref,
@@ -149,4 +149,4 @@ JSValueRef Value::Extract() {
 
 #endif
 
-}  // namespace mnc
+}  // namespace bastian

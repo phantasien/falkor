@@ -1,34 +1,34 @@
 #include <gtest/gtest.h>
-#include <mnc.h>
+#include <bastian.h>
 #include <iostream>
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 #include "v8/test-v8-common.h"
 #define OBJECT_CONTEXT_TEST_SUITE V8ObjectContext
 #endif
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 #include "jsc/test-jsc-common.h"
 #define OBJECT_CONTEXT_TEST_SUITE JSCObjectContext
 #endif
 
-using namespace mnc;
+using namespace bastian;
 
-static mnc::Handle<mnc::Value> result = mnc::NullValue::New();
+static bastian::Handle<bastian::Value> result = bastian::NullValue::New();
 
-MNC_FUNC(CollectMyResult) {
+BASTIAN_FUNC(CollectMyResult) {
   result = ctx->GetArgument(0);
 }
 
-MNC_OBJ(Child) {
+BASTIAN_OBJ(Child) {
   ctx->Export("collect", CollectMyResult);
 }
 
-MNC_OBJ(Wrapper) {
+BASTIAN_OBJ(Wrapper) {
   ctx->Export("child", Child); 
 }
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 
 TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 
@@ -65,7 +65,7 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 
 #endif
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 
 using namespace v8;
 

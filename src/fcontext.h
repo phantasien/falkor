@@ -18,15 +18,15 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef MNC_FCONTEXT_H_
-#define MNC_FCONTEXT_H_
+#ifndef BASTIAN_FCONTEXT_H_
+#define BASTIAN_FCONTEXT_H_
 
 #include <vector>
 #include "src/handle.h"
 #include "src/value.h"
 
 
-namespace mnc {
+namespace bastian {
 
 class FunctionContext {
  public:
@@ -42,7 +42,7 @@ class FunctionContext {
 // V8 Function Context
 //
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 
 #include <v8.h>
 
@@ -58,13 +58,13 @@ class V8FunctionContext : FunctionContext {
 };
 
 
-#define MNC_FUNC(FuncName) \
-void WRAPPED_FUNC_NAME(FuncName)(mnc::V8FunctionContext* ctx); \
+#define BASTIAN_FUNC(FuncName) \
+void WRAPPED_FUNC_NAME(FuncName)(bastian::V8FunctionContext* ctx); \
 void FuncName(const v8::FunctionCallbackInfo<v8::Value>& infos) { \
-  mnc::V8FunctionContext* ctx = new mnc::V8FunctionContext(infos); \
+  bastian::V8FunctionContext* ctx = new bastian::V8FunctionContext(infos); \
   WRAPPED_FUNC_NAME(FuncName)(ctx); \
 } \
-void WRAPPED_FUNC_NAME(FuncName)(mnc::V8FunctionContext* ctx)
+void WRAPPED_FUNC_NAME(FuncName)(bastian::V8FunctionContext* ctx)
 
 
 #endif
@@ -73,7 +73,7 @@ void WRAPPED_FUNC_NAME(FuncName)(mnc::V8FunctionContext* ctx)
 // JavascriptCore Function Context
 //
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 
 #include <JavascriptCore/JavascriptCore.h>
 
@@ -101,8 +101,8 @@ class JSCFunctionContext : FunctionContext {
     JSValueRef result_ref_;
 };
 
-#define MNC_FUNC(FuncName) \
-void WRAPPED_FUNC_NAME(FuncName)(mnc::JSCFunctionContext* ctx); \
+#define BASTIAN_FUNC(FuncName) \
+void WRAPPED_FUNC_NAME(FuncName)(bastian::JSCFunctionContext* ctx); \
 JSValueRef FuncName( \
     JSContextRef context_ref, \
     JSObjectRef function_ref, \
@@ -110,7 +110,7 @@ JSValueRef FuncName( \
     size_t argument_count, \
     const JSValueRef* arguments_ref, \
     JSValueRef* exception_ref) { \
-  mnc::JSCFunctionContext* ctx = new mnc::JSCFunctionContext( \
+  bastian::JSCFunctionContext* ctx = new bastian::JSCFunctionContext( \
     context_ref, \
     function_ref, \
     this_ref, \
@@ -120,10 +120,10 @@ JSValueRef FuncName( \
   WRAPPED_FUNC_NAME(FuncName)(ctx); \
   return ctx->ResultRef(); \
 } \
-void WRAPPED_FUNC_NAME(FuncName)(mnc::JSCFunctionContext* ctx)
+void WRAPPED_FUNC_NAME(FuncName)(bastian::JSCFunctionContext* ctx)
 
 #endif
 
-}  // namespace mnc
+}  // namespace bastian
 
-#endif  // MNC_FCONTEXT_H_
+#endif  // BASTIAN_FCONTEXT_H_

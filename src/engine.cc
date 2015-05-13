@@ -20,14 +20,14 @@
 
 #include "src/engine.h"
 
-namespace mnc {
+namespace bastian {
 
 //
 // V8 Engine
 //
 
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 
 Engine * Engine::Create() {
   V8Engine* engine = new V8Engine();
@@ -45,7 +45,7 @@ void V8Engine::Run(const char * raw_source) {}
 //
 
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 
 Engine * Engine::Create() {
   JSCEngine* engine = new JSCEngine();
@@ -58,4 +58,4 @@ void JSCEngine::Run(const char * raw_source) {}
 
 #endif
 
-}  // namespace mnc
+}  // namespace bastian

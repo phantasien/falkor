@@ -23,13 +23,13 @@
 #include "src/fcontext.h"
 
 
-namespace mnc {
+namespace bastian {
 
 //
 // V8 Function Context
 //
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 
 V8FunctionContext::V8FunctionContext(
   const v8::FunctionCallbackInfo<v8::Value>& infos) {
@@ -61,7 +61,7 @@ void V8FunctionContext::SetResult(const Handle<Value>&  result) {
 // JavascriptCore Function Context
 //
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 
 JSCFunctionContext::JSCFunctionContext(
     JSContextRef context_ref,
@@ -107,4 +107,4 @@ JSValueRef JSCFunctionContext::ResultRef() {
 
 #endif
 
-}  // namespace mnc
+}  // namespace bastian

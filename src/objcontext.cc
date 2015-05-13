@@ -22,13 +22,13 @@
 #include <iostream>
 #include "src/objcontext.h"
 
-namespace mnc {
+namespace bastian {
 
 //
 // V8 Object Context
 //
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 
 V8ObjectContext::V8ObjectContext() {
   obj_template_ = v8::ObjectTemplate::New(v8::Isolate::GetCurrent());
@@ -64,7 +64,7 @@ void V8ObjectContext::Export(
 //
 
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 
 JSCObjectContext::JSCObjectContext(JSContextRef context_ref) {
   context_ref_ = context_ref;
@@ -127,4 +127,4 @@ void JSCObjectContext::Build(const char * name) {
 
 #endif
 
-}  // namespace mnc
+}  // namespace bastian

@@ -1,33 +1,33 @@
 #include <gtest/gtest.h>
-#include <mnc.h>
+#include <bastian.h>
 
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 #include "v8/test-v8-common.h"
 #define FUNCTION_CONTEXT_TEST_SUITE V8FunctionContext
 #endif
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 #include "jsc/test-jsc-common.h"
 #define FUNCTION_CONTEXT_TEST_SUITE JSCFunctionContext
 #endif
 
 static int argsCount = 0;
-static mnc::Handle<mnc::Value> result = mnc::NullValue::New();
+static bastian::Handle<bastian::Value> result = bastian::NullValue::New();
 
-MNC_FUNC(CountArgs) {
+BASTIAN_FUNC(CountArgs) {
   argsCount = ctx->ArgsCount();
 }
 
-MNC_FUNC(Add) {
+BASTIAN_FUNC(Add) {
   double val1 = ctx->GetArgument(0)->NumberValue();
   double val2 = ctx->GetArgument(1)->NumberValue();
-  mnc::Handle<mnc::Value> total = mnc::Number::New(val1 + val2);
+  bastian::Handle<bastian::Value> total = bastian::Number::New(val1 + val2);
 
   ctx->SetResult(total);
 }
 
-MNC_FUNC(CollectResult) {
+BASTIAN_FUNC(CollectResult) {
   result = ctx->GetArgument(0);
 }
 

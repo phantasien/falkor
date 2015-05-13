@@ -18,19 +18,19 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef MNC_OBJCONTEXT_H_
-#define MNC_OBJCONTEXT_H_
+#ifndef BASTIAN_OBJCONTEXT_H_
+#define BASTIAN_OBJCONTEXT_H_
 
 #include <vector>
 #include "src/fcontext.h"
 
-namespace mnc {
+namespace bastian {
 
 //
 // V8 Object Context
 //
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 
 #include <v8.h>
 
@@ -51,8 +51,8 @@ class V8ObjectContext {
 
 
 
-#define MNC_OBJ(ObjName) \
-void ObjName(mnc::V8ObjectContext* ctx)
+#define BASTIAN_OBJ(ObjName) \
+void ObjName(bastian::V8ObjectContext* ctx)
 
 #endif
 
@@ -62,7 +62,7 @@ void ObjName(mnc::V8ObjectContext* ctx)
 //
 
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 
 #include <JavascriptCore/JavascriptCore.h>
 
@@ -101,12 +101,12 @@ class JSCObjectContext {
 };
 
 
-#define MNC_OBJ(ObjName) \
-void ObjName(mnc::JSCObjectContext* ctx)
+#define BASTIAN_OBJ(ObjName) \
+void ObjName(bastian::JSCObjectContext* ctx)
 
 #endif
 
-}  // namespace mnc
+}  // namespace bastian
 
-#endif  // MNC_OBJCONTEXT_H_
+#endif  // BASTIAN_OBJCONTEXT_H_
 

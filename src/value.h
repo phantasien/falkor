@@ -18,21 +18,21 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef MNC_VALUE_H_
-#define MNC_VALUE_H_
+#ifndef BASTIAN_VALUE_H_
+#define BASTIAN_VALUE_H_
 
 #include "src/handle.h"
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 #include <v8.h>
 #endif
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 #include <JavascriptCore/JavascriptCore.h>
 #endif
 
 
-namespace mnc {
+namespace bastian {
 
 class Value {
  public:
@@ -48,12 +48,12 @@ class Value {
     bool IsUndefined();
     virtual double NumberValue() = 0;
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
     static Handle<Value> New(const v8::Local<v8::Value>&);
     v8::Local<v8::Value> Extract();
 #endif
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
     static Handle<Value> New(
         JSContextRef context_ref,
         JSValueRef jsc_value,
@@ -63,7 +63,7 @@ class Value {
 
  protected:
     Type type_;
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
     JSContextRef context_ref_;
 #endif
 };
@@ -87,6 +87,6 @@ class Number : Value {
     double val_;
 };
 
-}  // namespace mnc
+}  // namespace bastian
 
-#endif  // MNC_VALUE_H_
+#endif  // BASTIAN_VALUE_H_

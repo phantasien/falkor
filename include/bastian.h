@@ -1,9 +1,9 @@
-#ifndef MNC_ROOT
-#define MNC_ROOT
+#ifndef BASTIAN_ROOT_H
+#define BASTIAN_ROOT_H
 
 #include "../src/fcontext.h"
 #include "../src/handle.h"
 #include "../src/objcontext.h"
 #include "../src/value.h"
 
-#endif
+#endif  // BASTIAN_ROOT_H

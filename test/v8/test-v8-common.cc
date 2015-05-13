@@ -1,6 +1,6 @@
 #include <v8.h>
 #include <functional>
-#include <mnc.h>
+#include <bastian.h>
 #include "test-v8-common.h"
 
 using namespace v8;

@@ -18,10 +18,10 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef MNC_ENGINE_H_
-#define MNC_ENGINE_H_
+#ifndef BASTIAN_ENGINE_H_
+#define BASTIAN_ENGINE_H_
 
-namespace mnc {
+namespace bastian {
 
 class Engine {
  public:
@@ -34,7 +34,7 @@ class Engine {
 // V8 Engine
 //
 
-#ifdef MNC_V8
+#ifdef BASTIAN_V8
 #include <v8.h>
 
 class V8Engine : Engine {
@@ -49,7 +49,7 @@ class V8Engine : Engine {
 //
 
 
-#ifdef MNC_JSC
+#ifdef BASTIAN_JSC
 #include <JavascriptCore/JavascriptCore.h>
 
 class JSCEngine : Engine {
@@ -61,6 +61,6 @@ class JSCEngine : Engine {
 
 #endif
 
-}  // namespace mnc
+}  // namespace bastian
 
-#endif  // MNC_ENGINE_H_
+#endif  // BASTIAN_ENGINE_H_
