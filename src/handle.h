@@ -21,15 +21,40 @@
 #ifndef MNC_HANDLE_H_
 #define MNC_HANDLE_H_
 
+#include <cstdlib>
+
 namespace mnc {
 
 template<class ResourceType>
 class Handle {
  public:
-  Handle(ResourceType* resource);
-  ~Handle();
+  static inline bool Is(
+      ResourceType* resource,
+      const Handle<ResourceType>& reference) {
+    return resource == reference.resource_;
+  }
+
+  Handle<ResourceType> & operator= (const Handle<ResourceType> & other) {
+    this->resource_ = other.resource_;
+    this->allow_delete_ = false;
+    return *this;
+  }
+
+  inline Handle(ResourceType* resource) {
+    resource_ = resource;
+    allow_delete_ = true;
+  }
+
+  inline ResourceType* operator->() const {
+    return resource_;
+  }
+
+  ~Handle() {
+    if (allow_delete_) delete resource_;
+  }
 
  private:
+  bool allow_delete_;
   ResourceType * resource_;
 };
 

@@ -14,7 +14,7 @@
 
 using namespace mnc;
 
-static mnc::Value* result = mnc::Value::Null;
+static mnc::Handle<mnc::Value> result = mnc::NullValue::New();
 
 MNC_FUNC(CollectMyResult) {
   result = ctx->GetArgument(0);
@@ -70,7 +70,7 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 using namespace v8;
 
 TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
-  Handle<ObjectTemplate> global = ObjectTemplate::New(v8::Isolate::GetCurrent());
+  v8::Handle<ObjectTemplate> global = ObjectTemplate::New(v8::Isolate::GetCurrent());
 
   V8ObjectContext* new_object_ctx = new V8ObjectContext();
   Wrapper(new_object_ctx);

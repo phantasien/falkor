@@ -21,6 +21,8 @@
 #ifndef MNC_VALUE_H_
 #define MNC_VALUE_H_
 
+#include "src/handle.h"
+
 #ifdef MNC_V8
 #include <v8.h>
 #endif
@@ -34,10 +36,12 @@ namespace mnc {
 
 class Value {
  public:
-    enum Type {REF, NUMBER, STRING};
-
-    static Value* Null;
-    static Value* Undefined;
+    enum Type {
+        NUL,
+        NUMBER,
+        STRING,
+        UNDEFINED
+    };
 
     bool IsNumber();
     bool IsNull();
@@ -45,7 +49,7 @@ class Value {
     virtual double NumberValue() = 0;
 
 #ifdef MNC_V8
-    static Value* Create(v8::Local<v8::Value>);
+    static Handle<Value> New(const v8::Local<v8::Value>&);
     v8::Local<v8::Value> Extract();
 #endif
 
@@ -61,18 +65,22 @@ class Value {
     Type type_;
 };
 
-class RefValue : Value {
+class NullValue : Value {
  public:
-    RefValue();
+    static Handle<Value> New();
     double NumberValue();
+
+ private:
+    NullValue();
 };
 
 class Number : Value {
  public:
-    explicit Number(double val);
+    static Handle<Value> New(double val);
     double NumberValue();
 
  private:
+    explicit Number(double val);
     double val_;
 };
 

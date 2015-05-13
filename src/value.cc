@@ -33,24 +33,30 @@ bool Value::IsNumber() {
 }
 
 bool Value::IsNull() {
-  return this == Value::Null;
+  return type_ == NUL;
 }
 
 bool Value::IsUndefined() {
-  return this == Value::Undefined;
+  return type_ == UNDEFINED;
 }
 
+
 //
-// Common RefValue
+// Common NullValue
 //
 
 
-RefValue::RefValue() {
-  type_ = REF;
+NullValue::NullValue() {
+  type_ = NUL;
 }
 
-double RefValue::NumberValue() {
+double NullValue::NumberValue() {
   return -1;
+}
+
+Handle<Value> NullValue::New() {
+  Handle<Value> value(reinterpret_cast<Value*>(new NullValue()));
+  return value;
 }
 
 //
@@ -63,12 +69,14 @@ Number::Number(double val) {
   val_ = val;
 }
 
+Handle<Value> Number::New(double val) {
+  Handle<Value> value(reinterpret_cast<Value*>(new Number(val)));
+  return value;
+}
+
 double Number::NumberValue() {
   return val_;
 }
-
-Value* Value::Null = reinterpret_cast<Value*>(new RefValue());
-Value* Value::Undefined = reinterpret_cast<Value*>(new RefValue());
 
 
 //
@@ -78,11 +86,11 @@ Value* Value::Undefined = reinterpret_cast<Value*>(new RefValue());
 
 #ifdef MNC_V8
 
-Value* Value::Create(v8::Local<v8::Value> v8_value) {
-  Value* result = Value::Null;
+Handle<Value> Value::New(const v8::Local<v8::Value>& v8_value) {
+   Handle<Value> result = mnc::NullValue::New();
 
   if (v8_value->IsNumber()) {
-    result = reinterpret_cast<Value*>(new Number(v8_value->NumberValue()));
+    result = Number::New(v8_value->NumberValue());
   }
 
   return result;

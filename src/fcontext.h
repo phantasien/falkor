@@ -22,15 +22,17 @@
 #define MNC_FCONTEXT_H_
 
 #include <vector>
+#include "src/handle.h"
 #include "src/value.h"
+
 
 namespace mnc {
 
 class FunctionContext {
  public:
     virtual int ArgsCount() = 0;
-    virtual Value* GetArgument(int index) = 0;
-    virtual void SetResult(Value& result) = 0;
+    virtual Handle<Value> GetArgument(int index) = 0;
+    virtual void SetResult(const Handle<Value>&  result) = 0;
 };
 
 #define WRAPPED_FUNC_NAME(FuncName) Wrapped ## FuncName
@@ -48,8 +50,8 @@ class V8FunctionContext : FunctionContext {
  public:
     explicit V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>&);
     int ArgsCount();
-    Value* GetArgument(int index);
-    void SetResult(Value& result);
+    Handle<Value> GetArgument(int index);
+    void SetResult(const Handle<Value>& result);
 
  private:
     const v8::FunctionCallbackInfo<v8::Value>* infos_;
@@ -61,7 +63,6 @@ void WRAPPED_FUNC_NAME(FuncName)(mnc::V8FunctionContext* ctx); \
 void FuncName(const v8::FunctionCallbackInfo<v8::Value>& infos) { \
   mnc::V8FunctionContext* ctx = new mnc::V8FunctionContext(infos); \
   WRAPPED_FUNC_NAME(FuncName)(ctx); \
-  delete ctx; \
 } \
 void WRAPPED_FUNC_NAME(FuncName)(mnc::V8FunctionContext* ctx)
 

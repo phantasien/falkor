@@ -21,7 +21,6 @@
 #include <cstddef>
 
 #include "src/fcontext.h"
-#include "src/value.h"
 
 
 namespace mnc {
@@ -41,18 +40,18 @@ int V8FunctionContext::ArgsCount() {
   return infos_->Length();
 }
 
-Value* V8FunctionContext::GetArgument(int index) {
-  Value * argument = Value::Null;
+Handle<Value> V8FunctionContext::GetArgument(int index) {
+  Handle<Value> argument = Value::New((*infos_)[index]);
 
   if (infos_->Length() > index) {
-    argument = Value::Create((*infos_)[index]);
+    argument = Value::New((*infos_)[index]);
   }
 
   return argument;
 }
 
-void V8FunctionContext::SetResult(Value& result) {
-  infos_->GetReturnValue().Set(result.Extract());
+void V8FunctionContext::SetResult(const Handle<Value>&  result) {
+  infos_->GetReturnValue().Set(result->Extract());
 }
 
 #endif
