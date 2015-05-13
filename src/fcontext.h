@@ -18,11 +18,11 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef MNC_FCONTEXT
-#define MNC_FCONTEXT
+#ifndef MNC_FCONTEXT_H_
+#define MNC_FCONTEXT_H_
 
 #include <vector>
-#include "value.h"
+#include "src/value.h"
 
 namespace mnc {
 
@@ -33,17 +33,16 @@ class FunctionContext {
     virtual void SetResult(Value& result) = 0;
 };
 
-}
-
 #define WRAPPED_FUNC_NAME(FuncName) Wrapped ## FuncName
 
+
+//
+// V8 Function Context
+//
 
 #ifdef MNC_V8
 
 #include <v8.h>
-
-
-namespace mnc {
 
 class V8FunctionContext : FunctionContext {
  public:
@@ -55,8 +54,6 @@ class V8FunctionContext : FunctionContext {
  private:
     const v8::FunctionCallbackInfo<v8::Value>* infos_;
 };
-
-}  // namespace mnc
 
 
 #define MNC_FUNC(FuncName) \
@@ -71,12 +68,13 @@ void WRAPPED_FUNC_NAME(FuncName)(mnc::V8FunctionContext* ctx)
 
 #endif
 
+//
+// JavascriptCore Function Context
+//
 
 #ifdef MNC_JSC
 
 #include <JavascriptCore/JavascriptCore.h>
-
-namespace mnc {
 
 class JSCFunctionContext : FunctionContext {
  public:
@@ -123,8 +121,8 @@ JSValueRef FuncName( \
 } \
 void WRAPPED_FUNC_NAME(FuncName)(mnc::JSCFunctionContext* ctx)
 
+#endif
+
 }  // namespace mnc
 
-#endif
-
-#endif
+#endif  // MNC_FCONTEXT_H_

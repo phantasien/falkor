@@ -20,13 +20,17 @@
 
 #include <cstddef>
 
-#include "fcontext.h"
-#include "value.h"
+#include "src/fcontext.h"
+#include "src/value.h"
 
-
-#ifdef MNC_V8
 
 namespace mnc {
+
+//
+// V8 Function Context
+//
+
+#ifdef MNC_V8
 
 V8FunctionContext::V8FunctionContext(
   const v8::FunctionCallbackInfo<v8::Value>& infos) {
@@ -51,15 +55,14 @@ void V8FunctionContext::SetResult(Value& result) {
   infos_->GetReturnValue().Set(result.Extract());
 }
 
-
-}  // namespace mnc
-
 #endif
 
 
-#ifdef MNC_JSC
+//
+// JavascriptCore Function Context
+//
 
-namespace mnc {
+#ifdef MNC_JSC
 
 JSCFunctionContext::JSCFunctionContext(
     JSContextRef context_ref,
@@ -103,6 +106,6 @@ JSValueRef JSCFunctionContext::ResultRef() {
   return result_ref_;
 }
 
-}  // namespace mnc
-
 #endif
+
+}  // namespace mnc
