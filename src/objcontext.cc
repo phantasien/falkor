@@ -18,19 +18,20 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "mnc.h"
-#include "objcontext.h"
 
 #include <iostream>
-
-#ifdef MNC_V8
-
-using namespace v8;
+#include "src/objcontext.h"
 
 namespace mnc {
 
+//
+// V8 Object Context
+//
+
+#ifdef MNC_V8
+
 V8ObjectContext::V8ObjectContext() {
-  obj_template_ = ObjectTemplate::New(v8::Isolate::GetCurrent());
+  obj_template_ = v8::ObjectTemplate::New(v8::Isolate::GetCurrent());
 }
 
 v8::Handle<v8::ObjectTemplate> V8ObjectContext::ObjectTemplate() {
@@ -41,8 +42,8 @@ void V8ObjectContext::Export(
     const char * export_name,
     void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
   obj_template_->Set(
-    String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
-    FunctionTemplate::New(v8::Isolate::GetCurrent(), func));
+    v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
+    v8::FunctionTemplate::New(v8::Isolate::GetCurrent(), func));
 }
 
 void V8ObjectContext::Export(
@@ -51,18 +52,19 @@ void V8ObjectContext::Export(
   V8ObjectContext new_object_ctx;
   obj_generator(&new_object_ctx);
   obj_template_->Set(
-    String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
+    v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
     new_object_ctx.obj_template_);
 }
 
-}  // namespace mnc
-
-
 #endif
 
-#ifdef MNC_JSC
 
-namespace mnc {
+//
+// JavascriptCore Object Context
+//
+
+
+#ifdef MNC_JSC
 
 JSCObjectContext::JSCObjectContext(JSContextRef context_ref) {
   context_ref_ = context_ref;
@@ -119,11 +121,10 @@ void JSCObjectContext::Build(const char * name) {
       JSStringCreateWithUTF8CString(objects_.at(index)->name_),
       objects_.at(index)->object_ref_,
       NULL,
-      0
-    );
+      0);
   }
 }
 
-}  // namespace mnc
-
 #endif
+
+}  // namespace mnc

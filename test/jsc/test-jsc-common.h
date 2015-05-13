@@ -10,11 +10,11 @@ class TestContext {
 
   public:
     TestContext();
-    void AddFunction(const char * export_name, jsc_func);
+    void AddFunction(const char * export_name, mnc::jsc_func);
     void RunJS(const char *);
 
   private:
-    std::vector<func_def> functions_;
+    std::vector<mnc::func_def> functions_;
 };
 
 #endif
