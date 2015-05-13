@@ -40,7 +40,7 @@ class Handle {
     return *this;
   }
 
-  inline Handle(ResourceType* resource) {
+  inline explicit Handle(ResourceType* resource) {
     resource_ = resource;
     allow_delete_ = true;
   }
