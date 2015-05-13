@@ -70,6 +70,7 @@ double Number::NumberValue() {
 Value* Value::Null = reinterpret_cast<Value*>(new RefValue());
 Value* Value::Undefined = reinterpret_cast<Value*>(new RefValue());
 
+
 //
 // V8 Value
 //

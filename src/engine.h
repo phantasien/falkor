@@ -18,8 +18,8 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef MNC_ENGINE
-#define MNC_ENGINE
+#ifndef MNC_ENGINE_H_
+#define MNC_ENGINE_H_
 
 namespace mnc {
 
@@ -29,28 +29,28 @@ class Engine {
   static Engine * Create();
 };
 
-}  // namespace mnc
+
+//
+// V8 Engine
+//
 
 #ifdef MNC_V8
 #include <v8.h>
-
-namespace mnc {
 
 class V8Engine : Engine {
  public:
   V8Engine();
   void Run(const char *);
 };
-
-}  // namespace mnc
-
 #endif
+
+//
+// JavascriptCore Engine
+//
 
 
 #ifdef MNC_JSC
 #include <JavascriptCore/JavascriptCore.h>
-
-namespace mnc {
 
 class JSCEngine : Engine {
  public:
@@ -58,8 +58,9 @@ class JSCEngine : Engine {
   void Run(const char *);
 };
 
-}  // namespace mnc
 
 #endif
 
-#endif MNC_ENGINE
+}  // namespace mnc
+
+#endif  // MNC_ENGINE_H_

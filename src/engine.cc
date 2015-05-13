@@ -18,41 +18,44 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "engine.h"
+#include "src/engine.h"
+
+namespace mnc {
+
+//
+// V8 Engine
+//
+
 
 #ifdef MNC_V8
-namespace mnc {
 
 Engine * Engine::Create() {
   V8Engine* engine = new V8Engine();
-
-  return (Engine*)(engine);
+  return reinterpret_cast<Engine*>(engine);
 }
 
 V8Engine::V8Engine() {}
 
-void V8Engine::Run(const char * raw_source) {
+void V8Engine::Run(const char * raw_source) {}
 
-}
-
-}  // namespace mnc
 #endif
+
+//
+// JavascriptCore Engine
+//
 
 
 #ifdef MNC_JSC
-namespace mnc {
 
 Engine * Engine::Create() {
   JSCEngine* engine = new JSCEngine();
-
-  return (Engine*)(engine);
+  return reinterpret_cast<Engine*>(engine);
 }
 
 JSCEngine::JSCEngine() {}
 
-void JSCEngine::Run(const char * raw_source) {
+void JSCEngine::Run(const char * raw_source) {}
 
-}
+#endif
 
 }  // namespace mnc
-#endif
