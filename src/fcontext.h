@@ -32,7 +32,7 @@ class FunctionContext {
  public:
     virtual int ArgsCount() = 0;
     virtual Handle<Value> GetArgument(int index) = 0;
-    virtual void SetResult(const Handle<Value>&  result) = 0;
+    virtual void SetResult(const Handle<Value>& result) = 0;
 };
 
 #define WRAPPED_FUNC_NAME(FuncName) Wrapped ## FuncName
@@ -87,8 +87,8 @@ class JSCFunctionContext : FunctionContext {
       const JSValueRef*,
       JSValueRef*);
     int ArgsCount();
-    Value* GetArgument(int index);
-    void SetResult(Value& result);
+    Handle<Value> GetArgument(int index);
+    void SetResult(const Handle<Value>& result);
     JSValueRef ResultRef();
 
  private:

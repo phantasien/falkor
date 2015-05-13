@@ -84,11 +84,11 @@ int JSCFunctionContext::ArgsCount() {
   return static_cast<int>(argument_count_);
 }
 
-Value* JSCFunctionContext::GetArgument(int index) {
-  Value * argument = Value::Null;
+Handle<Value> JSCFunctionContext::GetArgument(int index) {
+  Handle<Value> argument = NullValue::New();
 
   if (argument_count_ > index) {
-    argument = Value::Create(
+    argument = Value::New(
       context_ref_,
       arguments_ref_[index],
       exception_ref_);
@@ -97,8 +97,8 @@ Value* JSCFunctionContext::GetArgument(int index) {
   return argument;
 }
 
-void JSCFunctionContext::SetResult(Value& val) {
-  result_ref_ = val.Extract(context_ref_);
+void JSCFunctionContext::SetResult(const Handle<Value>& val) {
+  result_ref_ = val->Extract();
 }
 
 JSValueRef JSCFunctionContext::ResultRef() {

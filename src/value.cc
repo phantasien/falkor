@@ -117,29 +117,31 @@ v8::Local<v8::Value> Value::Extract() {
 
 #ifdef MNC_JSC
 
-Value* Value::Create(
+Handle<Value> Value::New(
     JSContextRef context_ref,
     JSValueRef jsc_value,
     JSValueRef* exception_ref) {
-  Value* result = Value::Null;
+  Handle<Value> result = NullValue::New();
 
   if (JSValueIsNumber(context_ref, jsc_value)) {
-    result = reinterpret_cast<Value*>(new Number(JSValueToNumber(
+    result = Number::New(JSValueToNumber(
       context_ref,
       jsc_value,
-      exception_ref)));
+      exception_ref));
   }
+
+  result->context_ref_ = context_ref;
 
   return result;
 }
 
-JSValueRef Value::Extract(JSContextRef context_ref) {
+JSValueRef Value::Extract() {
   JSValueRef result;
 
   if (IsNumber()) {
-      result = JSValueMakeNumber(context_ref, NumberValue());
+      result = JSValueMakeNumber(context_ref_, NumberValue());
   } else {
-      result = JSValueMakeNull(context_ref);
+      result = JSValueMakeNull(context_ref_);
   }
 
   return result;

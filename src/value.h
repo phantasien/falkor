@@ -54,15 +54,18 @@ class Value {
 #endif
 
 #ifdef MNC_JSC
-    static Value* Create(
+    static Handle<Value> New(
         JSContextRef context_ref,
         JSValueRef jsc_value,
         JSValueRef* exception_ref);
-    JSValueRef Extract(JSContextRef);
+    JSValueRef Extract();
 #endif
 
  protected:
     Type type_;
+#ifdef MNC_JSC
+    JSContextRef context_ref_;
+#endif
 };
 
 class NullValue : Value {
