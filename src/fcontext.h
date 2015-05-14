@@ -32,7 +32,7 @@ class FunctionContext {
  public:
     virtual int ArgsCount() = 0;
     virtual Handle<Value> GetArgument(int index) = 0;
-    virtual void SetResult(const Handle<Value>& result) = 0;
+    virtual void SetResult(Handle<Value> result) = 0;
 };
 
 #define WRAPPED_FUNC_NAME(FuncName) Wrapped ## FuncName
@@ -51,7 +51,7 @@ class V8FunctionContext : FunctionContext {
     explicit V8FunctionContext(const v8::FunctionCallbackInfo<v8::Value>&);
     int ArgsCount();
     Handle<Value> GetArgument(int index);
-    void SetResult(const Handle<Value>& result);
+    void SetResult(Handle<Value> result);
 
  private:
     const v8::FunctionCallbackInfo<v8::Value>* infos_;
@@ -88,7 +88,7 @@ class JSCFunctionContext : FunctionContext {
       JSValueRef*);
     int ArgsCount();
     Handle<Value> GetArgument(int index);
-    void SetResult(const Handle<Value>& result);
+    void SetResult(Handle<Value> result);
     JSValueRef ResultRef();
 
  private:

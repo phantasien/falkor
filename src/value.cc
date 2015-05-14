@@ -130,18 +130,16 @@ Handle<Value> Value::New(
       exception_ref));
   }
 
-  result->context_ref_ = context_ref;
-
   return result;
 }
 
-JSValueRef Value::Extract() {
+JSValueRef Value::Extract(JSContextRef context_ref) {
   JSValueRef result;
 
   if (IsNumber()) {
-      result = JSValueMakeNumber(context_ref_, NumberValue());
+    result = JSValueMakeNumber(context_ref, NumberValue());
   } else {
-      result = JSValueMakeNull(context_ref_);
+    result = JSValueMakeNull(context_ref);
   }
 
   return result;

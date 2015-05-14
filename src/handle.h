@@ -34,27 +34,24 @@ class Handle {
     return resource == reference.resource_;
   }
 
-  Handle<ResourceType> & operator= (const Handle<ResourceType> & other) {
-    this->resource_ = other.resource_;
-    this->allow_delete_ = false;
+  inline Handle<ResourceType> & operator= (const Handle<ResourceType> & other) {
+    resource_ = other.resource_;
     return *this;
   }
 
   inline explicit Handle(ResourceType* resource) {
     resource_ = resource;
-    allow_delete_ = true;
   }
 
   inline ResourceType* operator->() const {
     return resource_;
   }
 
-  ~Handle() {
-    if (allow_delete_) delete resource_;
+  inline void Clear() {
+    delete resource_;
   }
 
  private:
-  bool allow_delete_;
   ResourceType * resource_;
 };
 

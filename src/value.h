@@ -58,14 +58,11 @@ class Value {
         JSContextRef context_ref,
         JSValueRef jsc_value,
         JSValueRef* exception_ref);
-    JSValueRef Extract();
+    JSValueRef Extract(JSContextRef context_ref);
 #endif
 
  protected:
     Type type_;
-#ifdef BASTIAN_JSC
-    JSContextRef context_ref_;
-#endif
 };
 
 class NullValue : Value {

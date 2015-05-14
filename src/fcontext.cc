@@ -50,7 +50,7 @@ Handle<Value> V8FunctionContext::GetArgument(int index) {
   return argument;
 }
 
-void V8FunctionContext::SetResult(const Handle<Value>&  result) {
+void V8FunctionContext::SetResult(Handle<Value> result) {
   infos_->GetReturnValue().Set(result->Extract());
 }
 
@@ -97,8 +97,8 @@ Handle<Value> JSCFunctionContext::GetArgument(int index) {
   return argument;
 }
 
-void JSCFunctionContext::SetResult(const Handle<Value>& val) {
-  result_ref_ = val->Extract();
+void JSCFunctionContext::SetResult(Handle<Value> val) {
+  result_ref_ = val->Extract(context_ref_);
 }
 
 JSValueRef JSCFunctionContext::ResultRef() {
