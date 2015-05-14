@@ -27,6 +27,15 @@ BASTIAN_FUNC(Add) {
   ctx->SetResult(total);
 }
 
+BASTIAN_FUNC(Concat) {
+  std::string str1 = ctx->GetArgument(0)->StringValue();
+  std::string str2 = ctx->GetArgument(1)->StringValue();
+  bastian::Handle<bastian::Value> concat = bastian::String::New(str1 + str2);
+
+  ctx->SetResult(concat);
+}
+
+
 BASTIAN_FUNC(CollectResult) {
   result = ctx->GetArgument(0);
 }
@@ -45,10 +54,26 @@ TEST(FUNCTION_CONTEXT_TEST_SUITE, RetreiveNumberArgument) {
   EXPECT_EQ(1, result->NumberValue());
 }
 
+TEST(FUNCTION_CONTEXT_TEST_SUITE, RetreiveStringArgument) {
+  TestContext testContext;
+  testContext.AddFunction("collectResult", CollectResult);
+  testContext.RunJS("collectResult('foobar')");
+  EXPECT_STREQ("foobar", result->StringValue().c_str());
+}
+
+
 TEST(FUNCTION_CONTEXT_TEST_SUITE, Add) {
   TestContext testContext;
   testContext.AddFunction("add", Add);
   testContext.AddFunction("collectResult", CollectResult);
   testContext.RunJS("collectResult(add(1, 1))");
   EXPECT_EQ(2, result->NumberValue());
+}
+
+TEST(FUNCTION_CONTEXT_TEST_SUITE, Concat) {
+  TestContext testContext;
+  testContext.AddFunction("concat", Concat);
+  testContext.AddFunction("collectResult", CollectResult);
+  testContext.RunJS("collectResult(concat('foo', 'bar'))");
+  EXPECT_STREQ("foobar", result->StringValue().c_str());
 }

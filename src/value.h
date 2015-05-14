@@ -21,6 +21,8 @@
 #ifndef BASTIAN_VALUE_H_
 #define BASTIAN_VALUE_H_
 
+#include <string>
+
 #include "src/handle.h"
 
 #ifdef BASTIAN_V8
@@ -45,8 +47,10 @@ class Value {
 
     bool IsNumber();
     bool IsNull();
+    bool IsString();
     bool IsUndefined();
     virtual double NumberValue() = 0;
+    virtual std::string StringValue() = 0;
 
 #ifdef BASTIAN_V8
     static Handle<Value> New(const v8::Local<v8::Value>&);
@@ -69,6 +73,7 @@ class NullValue : Value {
  public:
     static Handle<Value> New();
     double NumberValue();
+    std::string StringValue();
 
  private:
     NullValue();
@@ -78,10 +83,22 @@ class Number : Value {
  public:
     static Handle<Value> New(double val);
     double NumberValue();
+    std::string StringValue();
 
  private:
     explicit Number(double val);
     double val_;
+};
+
+class String : Value {
+ public:
+    static Handle<Value> New(const std::string& val);
+    double NumberValue();
+    std::string StringValue();
+
+ private:
+    explicit String(const std::string& val);
+    std::string val_;
 };
 
 }  // namespace bastian

@@ -76,7 +76,7 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
   Wrapper(new_object_ctx);
 
   global->Set(
-    String::NewFromUtf8(v8::Isolate::GetCurrent(), "wrapper"),
+    v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "wrapper"),
     new_object_ctx->ObjectTemplate()
   );
 
@@ -88,7 +88,7 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 
 
 
-  Local<String> source = String::NewFromUtf8(v8::Isolate::GetCurrent(), "wrapper.child.collect(42)");
+  Local<v8::String> source = v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "wrapper.child.collect(42)");
   Local<Script> script = Script::Compile(source);
 
   script->Run();

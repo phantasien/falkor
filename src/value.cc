@@ -36,6 +36,10 @@ bool Value::IsNull() {
   return type_ == NUL;
 }
 
+bool Value::IsString() {
+  return type_ == STRING;
+}
+
 bool Value::IsUndefined() {
   return type_ == UNDEFINED;
 }
@@ -54,6 +58,10 @@ double NullValue::NumberValue() {
   return -1;
 }
 
+std::string NullValue::StringValue() {
+  return "";
+}
+
 Handle<Value> NullValue::New() {
   Handle<Value> value(reinterpret_cast<Value*>(new NullValue()));
   return value;
@@ -69,13 +77,40 @@ Number::Number(double val) {
   val_ = val;
 }
 
+double Number::NumberValue() {
+  return val_;
+}
+
+std::string Number::StringValue() {
+  return "";
+}
+
 Handle<Value> Number::New(double val) {
   Handle<Value> value(reinterpret_cast<Value*>(new Number(val)));
   return value;
 }
 
-double Number::NumberValue() {
+//
+// Common String
+//
+
+
+String::String(const std::string& val) {
+  type_ = STRING;
+  val_ = val;
+}
+
+double String::NumberValue() {
+  return -1;
+}
+
+std::string String::StringValue() {
   return val_;
+}
+
+Handle<Value> String::New(const std::string& val) {
+  Handle<Value> value(reinterpret_cast<Value*>(new String(val)));
+  return value;
 }
 
 
@@ -87,10 +122,16 @@ double Number::NumberValue() {
 #ifdef BASTIAN_V8
 
 Handle<Value> Value::New(const v8::Local<v8::Value>& v8_value) {
-    Handle<Value> result = bastian::NullValue::New();
+  Handle<Value> result = bastian::NullValue::New();
 
   if (v8_value->IsNumber()) {
     result = Number::New(v8_value->NumberValue());
+  } else if (v8_value->IsString()) {
+    v8::Local<v8::String> v8_string = v8_value->ToString();
+    int str_size = v8_string->Utf8Length() + 1;
+    char utf8_buffer[str_size];
+    v8_string->WriteUtf8(utf8_buffer, str_size);
+    result = String::New(utf8_buffer);
   }
 
   return result;
@@ -103,6 +144,10 @@ v8::Local<v8::Value> Value::Extract() {
     result = v8::Number::New(
       v8::Isolate::GetCurrent(),
       NumberValue());
+  } else if (IsString()) {
+    result = v8::String::NewFromUtf8(
+      v8::Isolate::GetCurrent(),
+      StringValue().c_str());
   }
 
   return result;
@@ -128,6 +173,16 @@ Handle<Value> Value::New(
       context_ref,
       jsc_value,
       exception_ref));
+  } else if (JSValueIsString(context_ref, jsc_value)) {
+    JSStringRef jsc_string = JSValueToStringCopy(
+      context_ref,
+      jsc_value,
+      exception_ref);
+    int str_size = JSStringGetLength(jsc_string) + 1;
+    char utf8_buffer[str_size];
+    JSStringGetUTF8CString(jsc_string, utf8_buffer, str_size);
+
+    result = String::New(utf8_buffer);
   }
 
   return result;
@@ -138,6 +193,10 @@ JSValueRef Value::Extract(JSContextRef context_ref) {
 
   if (IsNumber()) {
     result = JSValueMakeNumber(context_ref, NumberValue());
+  } else if (IsString()) {
+    result = JSValueMakeString(
+      context_ref,
+      JSStringCreateWithUTF8CString (StringValue().c_str()));
   } else {
     result = JSValueMakeNull(context_ref);
   }

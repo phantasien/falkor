@@ -17,7 +17,7 @@ TestContext::TestContext() {
 
 void TestContext::AddFunction(const char * export_name, void (*func)(const v8::FunctionCallbackInfo<v8::Value>&)) {
   global_->Set(
-    String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
+    v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
     FunctionTemplate::New(v8::Isolate::GetCurrent(), func));
 }
 
@@ -28,7 +28,7 @@ void TestContext::RunJS(const char * rawSource) {
   // Enter the context for compiling and running the hello world script.
   Context::Scope context_scope(context);
 
-  Local<String> source = String::NewFromUtf8(v8::Isolate::GetCurrent(), rawSource);
+  Local<v8::String> source = v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), rawSource);
   Local<Script> script = Script::Compile(source);
 
   script->Run();
