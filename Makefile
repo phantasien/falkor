@@ -20,6 +20,8 @@ TEST_SUITE_JSC_OBJ := $(foreach src,${TEST_SUITE_SRC}, $(subst .cc,.jsc.o,$(src)
 SYS_NAME := $(shell uname -s)
 SYS_NAME_LOWER := $(call lowercase,${SYS_NAME})
 
+GTEST_LIBS_PATH := deps/gtest/cbuild
+
 ifeq (${SYS_NAME_LOWER},linux)
 	V8_LIBS_PATH := ${CURDIR}/deps/v8/out/native/obj.target/tools/gyp
 	SYS_CXX_FLAGS :=
@@ -37,7 +39,7 @@ V8_CXX_FLAGS := -I${CURDIR} \
     -I${CURDIR}/deps/v8/include \
     -DBASTIAN_V8 \
     -w \
-    -L${CURDIR}/deps/gtest/cbuild \
+    -L${CURDIR}/${GTEST_LIBS_PATH} \
     -L${V8_LIBS_PATH} \
     ${SYS_CXX_FLAGS} \
     -lgtest -lgtest_main -lpthread \
@@ -48,7 +50,7 @@ JSC_CXX_FLAGS := -I${CURDIR} \
     -I${CURDIR}/deps/gtest/include \
     -DBASTIAN_JSC \
     -w \
-    -L${CURDIR}/deps/gtest/cbuild \
+    -L${CURDIR}/${GTEST_LIBS_PATH} \
     ${SYS_CXX_FLAGS} \
     -lgtest -lgtest_main -lpthread \
     -fobjc-arc -framework JavascriptCore
@@ -76,10 +78,10 @@ test/v8/%.o: test/v8/%.cc
 test/jsc/%.o: test/jsc/%.cc
 	@g++ -o $@ -c $< ${JSC_CXX_FLAGS}
 
-test/v8/run: deps/v8 deps/gtest ${BASTIAN_V8_OBJ} ${V8_TEST_OBJ} ${TEST_SUITE_V8_OBJ}
+test/v8/run: ${V8_LIBS_PATH} ${GTEST_LIBS_PATH} ${BASTIAN_V8_OBJ} ${V8_TEST_OBJ} ${TEST_SUITE_V8_OBJ}
 	@g++ -o test/v8/run ${BASTIAN_V8_OBJ} ${V8_TEST_OBJ} ${TEST_SUITE_V8_OBJ} ${V8_CXX_FLAGS}
 
-test/jsc/run: deps/gtest ${BASTIAN_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ}
+test/jsc/run: ${GTEST_LIBS_PATH} ${BASTIAN_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ}
 	@g++ -o test/jsc/run ${BASTIAN_JSC_OBJ} ${JSC_TEST_OBJ} ${TEST_SUITE_JSC_OBJ} ${JSC_CXX_FLAGS}
 
 test-jsc: test/jsc/run
@@ -95,20 +97,13 @@ test: test-v8 test-jsc
 lint:
 	@python deps/cpplint.py --root=src --slug=bastian ${BASTIAN_SRC} ${BASTIAN_HEADERS}
 
-deps/v8:
-	@mkdir -p deps
-	@git clone --depth=1 https://github.com/phantasien/v8 deps/v8
+${V8_LIBS_PATH}:
 	@make -C deps/v8 builddeps
 	@make -C deps/v8 native -j4 i18nsupport=off werror=no
 
-deps/gtest: deps/gtest.zip
-
-deps/gtest.zip:
-	@-curl -L https://googletest.googlecode.com/files/gtest-1.7.0.zip > deps/gtest.zip
-	@unzip -d deps deps/gtest.zip
-	@mv deps/gtest-1.7.0 deps/gtest
-	@mkdir deps/gtest/cbuild
-	@cd deps/gtest/cbuild && cmake -G"Unix Makefiles" ${SYS_CMAKE_FLAGS} .. && make
+${GTEST_LIBS_PATH}:
+	@mkdir ${GTEST_LIBS_PATH}
+	@cd ${GTEST_LIBS_PATH} && cmake -G"Unix Makefiles" ${SYS_CMAKE_FLAGS} .. && make
 
 .PHONY: test
 
