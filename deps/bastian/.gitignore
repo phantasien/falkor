@@ -1,0 +1,6 @@
+*.o
+*.a
+config.log
+test/*/run
+deps/gtest/cbuild
+
