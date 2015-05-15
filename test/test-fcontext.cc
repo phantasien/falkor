@@ -36,7 +36,7 @@ BASTIAN_FUNC(Concat) {
 }
 
 
-BASTIAN_FUNC(CollectResult) {
+BASTIAN_FUNC(CollectFContextResult) {
   result = ctx->GetArgument(0);
 }
 
@@ -49,14 +49,14 @@ TEST(FUNCTION_CONTEXT_TEST_SUITE, CountArgs) {
 
 TEST(FUNCTION_CONTEXT_TEST_SUITE, RetreiveNumberArgument) {
   TestContext testContext;
-  testContext.AddFunction("collectResult", CollectResult);
+  testContext.AddFunction("collectResult", CollectFContextResult);
   testContext.RunJS("collectResult(1)");
   EXPECT_EQ(1, result->NumberValue());
 }
 
 TEST(FUNCTION_CONTEXT_TEST_SUITE, RetreiveStringArgument) {
   TestContext testContext;
-  testContext.AddFunction("collectResult", CollectResult);
+  testContext.AddFunction("collectResult", CollectFContextResult);
   testContext.RunJS("collectResult('foobar')");
   EXPECT_STREQ("foobar", result->StringValue().c_str());
 }
@@ -65,7 +65,7 @@ TEST(FUNCTION_CONTEXT_TEST_SUITE, RetreiveStringArgument) {
 TEST(FUNCTION_CONTEXT_TEST_SUITE, Add) {
   TestContext testContext;
   testContext.AddFunction("add", Add);
-  testContext.AddFunction("collectResult", CollectResult);
+  testContext.AddFunction("collectResult", CollectFContextResult);
   testContext.RunJS("collectResult(add(1, 1))");
   EXPECT_EQ(2, result->NumberValue());
 }
@@ -73,7 +73,7 @@ TEST(FUNCTION_CONTEXT_TEST_SUITE, Add) {
 TEST(FUNCTION_CONTEXT_TEST_SUITE, Concat) {
   TestContext testContext;
   testContext.AddFunction("concat", Concat);
-  testContext.AddFunction("collectResult", CollectResult);
+  testContext.AddFunction("collectResult", CollectFContextResult);
   testContext.RunJS("collectResult(concat('foo', 'bar'))");
   EXPECT_STREQ("foobar", result->StringValue().c_str());
 }

@@ -14,12 +14,12 @@
 
 static bastian::Handle<bastian::Value> result = bastian::NullValue::New();
 
-BASTIAN_FUNC(CollectMyResult) {
+BASTIAN_FUNC(CollectObjContextResult) {
   result = ctx->GetArgument(0);
 }
 
 BASTIAN_OBJ(Child) {
-  ctx->Export("collect", CollectMyResult);
+  ctx->Export("collect", CollectObjContextResult);
 }
 
 BASTIAN_OBJ(Wrapper) {
