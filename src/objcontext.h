@@ -94,7 +94,7 @@ typedef void (*jsc_obj_generator)(Handle<JSCObjectContext>);
 
 
 class JSCObjectContext {
- friend class JSCEngine;
+  friend class JSCEngine;
 
  public:
     explicit JSCObjectContext(JSContextRef);

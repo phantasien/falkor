@@ -29,8 +29,8 @@
 #include <JavascriptCore/JavascriptCore.h>
 #endif
 
-#include "handle.h"
-#include "objcontext.h"
+#include "src/handle.h"
+#include "src/objcontext.h"
 
 
 namespace bastian {
@@ -46,7 +46,6 @@ class Engine {
 #ifdef BASTIAN_JSC
   static Handle<Engine> New(jsc_obj_generator obj_generator);
 #endif
-
 };
 
 
@@ -58,7 +57,7 @@ class Engine {
 
 class V8Engine : Engine {
  public:
-  V8Engine(v8_obj_generator);
+  explicit V8Engine(v8_obj_generator);
   void Run(const char *);
 
  private:
@@ -75,7 +74,7 @@ class V8Engine : Engine {
 
 class JSCEngine : Engine {
  public:
-  JSCEngine(jsc_obj_generator);
+  explicit JSCEngine(jsc_obj_generator);
   void Run(const char *);
 
  private:

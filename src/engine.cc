@@ -38,7 +38,7 @@ static v8::HandleScope handle_scope(isolate);
 Handle<Engine> Engine::New(v8_obj_generator obj_generator) {
   V8Engine* engine = new V8Engine(obj_generator);
   Handle<Engine> handle(reinterpret_cast<Engine*>(engine));
-  
+
   return handle;
 }
 
@@ -49,7 +49,7 @@ V8Engine::V8Engine(v8_obj_generator obj_generator) {
 void V8Engine::Run(const char * raw_source) {
   Handle<V8ObjectContext> global = V8ObjectContext::New();
 
-  obj_generator_(global);  
+  obj_generator_(global);
 
   v8::Local<v8::Context> context = v8::Context::New(
     v8::Isolate::GetCurrent(), NULL, global->ObjectTemplate());
@@ -78,7 +78,7 @@ Handle<Engine> Engine::New(jsc_obj_generator obj_generator) {
 }
 
 JSCEngine::JSCEngine(jsc_obj_generator obj_generator) {
-  obj_generator_ = obj_generator;  
+  obj_generator_ = obj_generator;
 }
 
 
@@ -99,7 +99,7 @@ void JSCEngine::Run(const char * raw_source) {
   JSClassRef globals = JSClassCreate(&globalsDefinition);
   JSContextRef ctx = JSGlobalContextCreate(globals);
 
-  bastian::Handle<bastian::JSCObjectContext> new_object_ctx = bastian::JSCObjectContext::New(ctx);
+  Handle<JSCObjectContext> new_object_ctx = JSCObjectContext::New(ctx);
   obj_generator_(new_object_ctx);
 
   JSObjectRef global_object = JSContextGetGlobalObject(ctx);
