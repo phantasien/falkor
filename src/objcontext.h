@@ -23,6 +23,7 @@
 
 #include <vector>
 #include "src/fcontext.h"
+#include "src/handle.h"
 
 namespace bastian {
 
@@ -42,8 +43,10 @@ class V8ObjectContext {
         void (*func)(const v8::FunctionCallbackInfo<v8::Value>&));
     void Export(
         const char * export_name,
-        void (*obj_generator)(V8ObjectContext*));
+        void (*obj_generator)(Handle<V8ObjectContext>));
     v8::Handle<v8::ObjectTemplate> ObjectTemplate();
+
+    static Handle<V8ObjectContext> New();
 
  private:
     v8::Handle<v8::ObjectTemplate> obj_template_;
@@ -52,7 +55,7 @@ class V8ObjectContext {
 
 
 #define BASTIAN_OBJ(ObjName) \
-void ObjName(bastian::V8ObjectContext* ctx)
+void ObjName(bastian::Handle<bastian::V8ObjectContext> ctx)
 
 #endif
 
@@ -89,20 +92,22 @@ class JSCObjectContext {
         jsc_func func);
     void Export(
         const char * export_name,
-        void (*obj_generator)(JSCObjectContext*));
+        void (*obj_generator)(Handle<JSCObjectContext>));
     void Build(const char * name);
     JSObjectRef object_ref_;
+
+    static Handle<JSCObjectContext> New(JSContextRef);
 
  private:
     JSContextRef context_ref_;
     std::vector<func_def> functions_;
-    std::vector<JSCObjectContext*> objects_;
+    std::vector< Handle<JSCObjectContext> > objects_;
     const char * name_;
 };
 
 
 #define BASTIAN_OBJ(ObjName) \
-void ObjName(bastian::JSCObjectContext* ctx)
+void ObjName(bastian::Handle<bastian::JSCObjectContext> ctx)
 
 #endif
 

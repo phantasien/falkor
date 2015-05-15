@@ -12,8 +12,6 @@
 #define OBJECT_CONTEXT_TEST_SUITE JSCObjectContext
 #endif
 
-using namespace bastian;
-
 static bastian::Handle<bastian::Value> result = bastian::NullValue::New();
 
 BASTIAN_FUNC(CollectMyResult) {
@@ -48,7 +46,7 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
   JSClassRef globals = JSClassCreate(&globalsDefinition);
   JSContextRef ctx = JSGlobalContextCreate(globals);
 
-  JSCObjectContext* new_object_ctx = new JSCObjectContext(ctx);
+  bastian::Handle<bastian::JSCObjectContext> new_object_ctx = bastian::JSCObjectContext::New(ctx);
   Wrapper(new_object_ctx);
 
   new_object_ctx->Build("wrapper");
@@ -67,12 +65,10 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
 
 #ifdef BASTIAN_V8
 
-using namespace v8;
-
 TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
-  v8::Handle<ObjectTemplate> global = ObjectTemplate::New(v8::Isolate::GetCurrent());
+  v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New(v8::Isolate::GetCurrent());
 
-  V8ObjectContext* new_object_ctx = new V8ObjectContext();
+  bastian::Handle<bastian::V8ObjectContext> new_object_ctx = bastian::V8ObjectContext::New();
   Wrapper(new_object_ctx);
 
   global->Set(
@@ -81,15 +77,15 @@ TEST(OBJECT_CONTEXT_TEST_SUITE, FillObject) {
   );
 
   // Create a new context.
-  Local<Context> context = Context::New(v8::Isolate::GetCurrent(), NULL, global);
+  v8::Local<v8::Context> context = v8::Context::New(v8::Isolate::GetCurrent(), NULL, global);
 
   // Enter the context for compiling and running the hello world script.
-  Context::Scope context_scope(context);
+  v8::Context::Scope context_scope(context);
 
 
 
-  Local<v8::String> source = v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "wrapper.child.collect(42)");
-  Local<Script> script = Script::Compile(source);
+  v8::Local<v8::String> source = v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "wrapper.child.collect(42)");
+  v8::Local<v8::Script> script = v8::Script::Compile(source);
 
   script->Run();
   EXPECT_EQ(42, result->NumberValue());

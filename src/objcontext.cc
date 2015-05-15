@@ -48,13 +48,18 @@ void V8ObjectContext::Export(
 
 void V8ObjectContext::Export(
     const char * export_name,
-    void (*obj_generator)(V8ObjectContext*)) {
-  V8ObjectContext new_object_ctx;
+    void (*obj_generator)(Handle<V8ObjectContext>)) {
+  Handle<V8ObjectContext> new_object_ctx = V8ObjectContext::New();
 
-  obj_generator(&new_object_ctx);
+  obj_generator(new_object_ctx);
   obj_template_->Set(
     v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
-    new_object_ctx.obj_template_);
+    new_object_ctx->obj_template_);
+}
+
+Handle<V8ObjectContext> V8ObjectContext::New() {
+  Handle<V8ObjectContext> handle(new V8ObjectContext());
+  return handle;
 }
 
 #endif
@@ -80,8 +85,8 @@ void JSCObjectContext::Export(const char * export_name, jsc_func func) {
 
 void JSCObjectContext::Export(
     const char * export_name,
-    void (*obj_generator)(JSCObjectContext*)) {
-  JSCObjectContext* new_object_ctx = new JSCObjectContext(context_ref_);
+    void (*obj_generator)(Handle<JSCObjectContext>)) {
+  Handle<JSCObjectContext> new_object_ctx = JSCObjectContext::New(context_ref_);
   obj_generator(new_object_ctx);
   new_object_ctx->Build(export_name);
   objects_.push_back(new_object_ctx);
@@ -128,6 +133,11 @@ void JSCObjectContext::Build(const char * name) {
       NULL,
       0);
   }
+}
+
+Handle<JSCObjectContext> JSCObjectContext::New(JSContextRef context_ref) {
+  Handle<JSCObjectContext> handle(new JSCObjectContext(context_ref));
+  return handle;
 }
 
 #endif
