@@ -114,6 +114,23 @@ void JSCEngine::Run(const char * raw_source) {
       0);
   }
 
+  for (int index = 0; index < new_object_ctx->functions_.size(); ++index) {
+    jsc_func_export func_export = new_object_ctx->functions_.at(index);
+    JSObjectSetProperty(
+      ctx,
+      global_object,
+      JSStringCreateWithUTF8CString(func_export.export_name),
+      JSObjectMakeFunctionWithCallback(
+        ctx,
+        JSStringCreateWithUTF8CString(func_export.export_name),
+        func_export.func),
+      NULL,
+      0);
+  }
+
+
+
+
   JSStringRef script = JSStringCreateWithUTF8CString(raw_source);
   JSValueRef exception = NULL;
   JSEvaluateScript(ctx, script, NULL, NULL, 1, &exception);
