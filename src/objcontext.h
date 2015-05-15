@@ -82,17 +82,20 @@ typedef JSValueRef (*jsc_func) (
     const JSValueRef*,
     JSValueRef*);
 
-typedef struct t_func_def {
+typedef struct t_jsc_func_export {
   jsc_func func;
   const char * export_name;
-} func_def;
+} jsc_func_export;
 
 class JSCObjectContext;
+class JSCEngine;
 
 typedef void (*jsc_obj_generator)(Handle<JSCObjectContext>);
 
 
 class JSCObjectContext {
+ friend class JSCEngine;
+
  public:
     explicit JSCObjectContext(JSContextRef);
     void Export(
@@ -108,7 +111,7 @@ class JSCObjectContext {
 
  private:
     JSContextRef context_ref_;
-    std::vector<func_def> functions_;
+    std::vector<jsc_func_export> functions_;
     std::vector< Handle<JSCObjectContext> > objects_;
     const char * name_;
 };

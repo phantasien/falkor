@@ -20,6 +20,8 @@
 
 #include "src/engine.h"
 
+#include <iostream>
+
 namespace bastian {
 
 //
@@ -79,7 +81,43 @@ JSCEngine::JSCEngine(jsc_obj_generator obj_generator) {
   obj_generator_ = obj_generator;  
 }
 
-void JSCEngine::Run(const char * raw_source) {}
+
+void JSCEngine::Run(const char * raw_source) {
+  JSStaticValue staticValues[] = {
+    { 0, 0, 0, 0 }
+  };
+
+  JSStaticFunction staticFunctions[] = {
+      { 0, 0, 0 }
+  };
+
+  JSClassDefinition globalsDefinition = {
+      0, kJSClassAttributeNone, "globals", 0, staticValues, staticFunctions,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  };
+
+  JSClassRef globals = JSClassCreate(&globalsDefinition);
+  JSContextRef ctx = JSGlobalContextCreate(globals);
+
+  bastian::Handle<bastian::JSCObjectContext> new_object_ctx = bastian::JSCObjectContext::New(ctx);
+  obj_generator_(new_object_ctx);
+
+  JSObjectRef global_object = JSContextGetGlobalObject(ctx);
+
+  for (int index = 0; index < new_object_ctx->objects_.size(); ++index) {
+    JSObjectSetProperty(
+      ctx,
+      global_object,
+      JSStringCreateWithUTF8CString(new_object_ctx->objects_.at(index)->name_),
+      new_object_ctx->objects_.at(index)->object_ref_,
+      NULL,
+      0);
+  }
+
+  JSStringRef script = JSStringCreateWithUTF8CString(raw_source);
+  JSValueRef exception = NULL;
+  JSEvaluateScript(ctx, script, NULL, NULL, 1, &exception);
+}
 
 #endif
 

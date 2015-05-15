@@ -77,7 +77,7 @@ JSCObjectContext::JSCObjectContext(JSContextRef context_ref) {
 }
 
 void JSCObjectContext::Export(const char * export_name, jsc_func func) {
-  func_def def;
+  jsc_func_export def;
   def.export_name = export_name;
   def.func = func;
   functions_.push_back(def);

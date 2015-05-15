@@ -14,7 +14,7 @@ class TestContext {
     void RunJS(const char *);
 
   private:
-    std::vector<bastian::func_def> functions_;
+    std::vector<bastian::jsc_func_export> functions_;
 };
 
 #endif
