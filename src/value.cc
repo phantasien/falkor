@@ -19,6 +19,7 @@
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "src/value.h"
+#include <cstdlib>
 
 
 namespace bastian {
@@ -123,15 +124,19 @@ Handle<Value> String::New(const std::string& val) {
 
 Handle<Value> Value::New(const v8::Local<v8::Value>& v8_value) {
   Handle<Value> result = bastian::NullValue::New();
+  v8::Local<v8::String> v8_string;
+  char* utf8_buffer;
+  int str_size;
 
   if (v8_value->IsNumber()) {
     result = Number::New(v8_value->NumberValue());
   } else if (v8_value->IsString()) {
-    v8::Local<v8::String> v8_string = v8_value->ToString();
-    int str_size = v8_string->Utf8Length() + 1;
-    char utf8_buffer[str_size];
+    v8_string = v8_value->ToString();
+    str_size = v8_string->Utf8Length() + 1;
+    utf8_buffer = static_cast<char*>(std::malloc(str_size));
     v8_string->WriteUtf8(utf8_buffer, str_size);
     result = String::New(utf8_buffer);
+    std::free(utf8_buffer);
   }
 
   return result;
@@ -167,6 +172,9 @@ Handle<Value> Value::New(
     JSValueRef jsc_value,
     JSValueRef* exception_ref) {
   Handle<Value> result = NullValue::New();
+  JSStringRef jsc_string;
+  int str_size;
+  char* utf8_buffer;
 
   if (JSValueIsNumber(context_ref, jsc_value)) {
     result = Number::New(JSValueToNumber(
@@ -174,15 +182,16 @@ Handle<Value> Value::New(
       jsc_value,
       exception_ref));
   } else if (JSValueIsString(context_ref, jsc_value)) {
-    JSStringRef jsc_string = JSValueToStringCopy(
+    jsc_string = JSValueToStringCopy(
       context_ref,
       jsc_value,
       exception_ref);
-    int str_size = JSStringGetLength(jsc_string) + 1;
-    char utf8_buffer[str_size];
-    JSStringGetUTF8CString(jsc_string, utf8_buffer, str_size);
 
+    str_size = JSStringGetLength(jsc_string) + 1;
+    utf8_buffer = static_cast<char*>(std::malloc(str_size));
+    JSStringGetUTF8CString(jsc_string, utf8_buffer, str_size);
     result = String::New(utf8_buffer);
+    std::free(utf8_buffer);
   }
 
   return result;
@@ -196,7 +205,7 @@ JSValueRef Value::Extract(JSContextRef context_ref) {
   } else if (IsString()) {
     result = JSValueMakeString(
       context_ref,
-      JSStringCreateWithUTF8CString (StringValue().c_str()));
+      JSStringCreateWithUTF8CString(StringValue().c_str()));
   } else {
     result = JSValueMakeNull(context_ref);
   }

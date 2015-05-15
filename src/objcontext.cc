@@ -50,6 +50,7 @@ void V8ObjectContext::Export(
     const char * export_name,
     void (*obj_generator)(V8ObjectContext*)) {
   V8ObjectContext new_object_ctx;
+
   obj_generator(&new_object_ctx);
   obj_template_->Set(
     v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), export_name),
@@ -87,12 +88,15 @@ void JSCObjectContext::Export(
 }
 
 void JSCObjectContext::Build(const char * name) {
-  JSStaticFunction static_functions[functions_.size() + 1];
+  JSStaticFunction* static_functions;
   JSStaticValue static_variables[] = {
     { 0, 0, 0, 0 }
   };
 
   JSStaticFunction end_function = {0, 0, 0};
+
+  static_functions = static_cast<JSStaticFunction*>(
+    std::malloc((functions_.size() + 1) * sizeof(JSStaticFunction)));
 
   name_ = name;
 
@@ -113,6 +117,7 @@ void JSCObjectContext::Build(const char * name) {
 
   JSClassRef class_ref = JSClassCreate(&class_definition);
   object_ref_ = JSObjectMake(context_ref_, class_ref, NULL);
+  std::free(static_functions);
 
   for (int index = 0; index < objects_.size(); index++) {
     JSObjectSetProperty(
