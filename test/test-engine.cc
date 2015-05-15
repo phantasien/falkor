@@ -11,9 +11,15 @@
 
 static bastian::Handle<bastian::Value> result = bastian::NullValue::New();
 
+BASTIAN_FUNC(CollectEngineResult) {
+  result = ctx->GetArgument(0);
+}
 
-BASTIAN_OBJ(Global) {}
+BASTIAN_OBJ(Global) {
+  ctx->Export("collect", CollectEngineResult);
+}
 
-TEST(FUNCTION_CONTEXT_TEST_SUITE, Run) {
-  bastian::Engine::New(Global);
+TEST(FUNCTION_CONTEXT_TEST_SUITE, GlobalFunction) {
+  bastian::Engine::New(Global)->Run("collect(42)");
+  EXPECT_EQ(42, result->NumberValue());
 }
