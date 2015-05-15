@@ -54,6 +54,12 @@ void V8FunctionContext::SetResult(Handle<Value> result) {
   infos_->GetReturnValue().Set(result->Extract());
 }
 
+Handle<V8FunctionContext> V8FunctionContext::New(
+    const v8::FunctionCallbackInfo<v8::Value>& infos) {
+  Handle<V8FunctionContext> handle(new V8FunctionContext(infos));
+  return handle;
+}
+
 #endif
 
 
@@ -103,6 +109,23 @@ void JSCFunctionContext::SetResult(Handle<Value> val) {
 
 JSValueRef JSCFunctionContext::ResultRef() {
   return result_ref_;
+}
+
+Handle<JSCFunctionContext> JSCFunctionContext::New(
+    JSContextRef context_ref,
+    JSObjectRef function_ref,
+    JSObjectRef this_ref,
+    size_t argument_count,
+    const JSValueRef* arguments_ref,
+    JSValueRef* exception) {
+  Handle<JSCFunctionContext> handle(new JSCFunctionContext(
+    context_ref,
+    function_ref,
+    this_ref,
+    argument_count,
+    arguments_ref,
+    exception));
+  return handle;
 }
 
 #endif
