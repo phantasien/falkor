@@ -1,5 +1,5 @@
-#ifndef BASTIAN_ROOT_H
-#define BASTIAN_ROOT_H
+#ifndef BASTIAN_ROOT_H_
+#define BASTIAN_ROOT_H_
 
 #include "../src/engine.h"
 #include "../src/fcontext.h"
@@ -7,4 +7,4 @@
 #include "../src/objcontext.h"
 #include "../src/value.h"
 
-#endif  // BASTIAN_ROOT_H
+#endif  // BASTIAN_ROOT_H_
