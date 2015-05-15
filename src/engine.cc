@@ -29,12 +29,20 @@ namespace bastian {
 
 #ifdef BASTIAN_V8
 
-Engine * Engine::Create() {
-  V8Engine* engine = new V8Engine();
-  return reinterpret_cast<Engine*>(engine);
+static v8::Isolate* isolate = v8::Isolate::New();
+static v8::Isolate::Scope isolatescope(isolate);
+static v8::HandleScope handle_scope(isolate);
+
+Handle<Engine> Engine::New(v8_obj_generator obj_generator) {
+  V8Engine* engine = new V8Engine(obj_generator);
+  Handle<Engine> handle(reinterpret_cast<Engine*>(engine));
+  
+  return handle;
 }
 
-V8Engine::V8Engine() {}
+V8Engine::V8Engine(v8_obj_generator obj_generator) {
+  obj_generator_ = obj_generator;
+}
 
 void V8Engine::Run(const char * raw_source) {}
 
@@ -47,12 +55,16 @@ void V8Engine::Run(const char * raw_source) {}
 
 #ifdef BASTIAN_JSC
 
-Engine * Engine::Create() {
-  JSCEngine* engine = new JSCEngine();
-  return reinterpret_cast<Engine*>(engine);
+Handle<Engine> Engine::New(jsc_obj_generator obj_generator) {
+  JSCEngine* engine = new JSCEngine(obj_generator);
+  Handle<Engine> handle(reinterpret_cast<Engine*>(engine));
+
+  return handle;
 }
 
-JSCEngine::JSCEngine() {}
+JSCEngine::JSCEngine(jsc_obj_generator obj_generator) {
+  obj_generator_ = obj_generator;  
+}
 
 void JSCEngine::Run(const char * raw_source) {}
 

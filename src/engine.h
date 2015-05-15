@@ -21,12 +21,32 @@
 #ifndef BASTIAN_ENGINE_H_
 #define BASTIAN_ENGINE_H_
 
+#ifdef BASTIAN_V8
+#include <v8.h>
+#endif
+
+#ifdef BASTIAN_JSC
+#include <JavascriptCore/JavascriptCore.h>
+#endif
+
+#include "handle.h"
+#include "objcontext.h"
+
+
 namespace bastian {
 
 class Engine {
  public:
   virtual void Run(const char *) = 0;
-  static Engine * Create();
+
+#ifdef BASTIAN_V8
+  static Handle<Engine> New(v8_obj_generator obj_generator);
+#endif
+
+#ifdef BASTIAN_JSC
+  static Handle<Engine> New(jsc_obj_generator obj_generator);
+#endif
+
 };
 
 
@@ -35,12 +55,14 @@ class Engine {
 //
 
 #ifdef BASTIAN_V8
-#include <v8.h>
 
 class V8Engine : Engine {
  public:
-  V8Engine();
+  V8Engine(v8_obj_generator);
   void Run(const char *);
+
+ private:
+  v8_obj_generator obj_generator_;
 };
 #endif
 
@@ -50,12 +72,14 @@ class V8Engine : Engine {
 
 
 #ifdef BASTIAN_JSC
-#include <JavascriptCore/JavascriptCore.h>
 
 class JSCEngine : Engine {
  public:
-  JSCEngine();
+  JSCEngine(jsc_obj_generator);
   void Run(const char *);
+
+ private:
+  jsc_obj_generator obj_generator_;
 };
 
 

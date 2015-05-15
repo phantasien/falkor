@@ -35,6 +35,10 @@ namespace bastian {
 
 #include <v8.h>
 
+class V8ObjectContext;
+
+typedef void (*v8_obj_generator)(Handle<V8ObjectContext>);
+
 class V8ObjectContext {
  public:
     V8ObjectContext();
@@ -43,7 +47,7 @@ class V8ObjectContext {
         void (*func)(const v8::FunctionCallbackInfo<v8::Value>&));
     void Export(
         const char * export_name,
-        void (*obj_generator)(Handle<V8ObjectContext>));
+        v8_obj_generator obj_generator);
     v8::Handle<v8::ObjectTemplate> ObjectTemplate();
 
     static Handle<V8ObjectContext> New();
@@ -83,6 +87,10 @@ typedef struct t_func_def {
   const char * export_name;
 } func_def;
 
+class JSCObjectContext;
+
+typedef void (*jsc_obj_generator)(Handle<JSCObjectContext>);
+
 
 class JSCObjectContext {
  public:
@@ -92,7 +100,7 @@ class JSCObjectContext {
         jsc_func func);
     void Export(
         const char * export_name,
-        void (*obj_generator)(Handle<JSCObjectContext>));
+        jsc_obj_generator obj_generator);
     void Build(const char * name);
     JSObjectRef object_ref_;
 

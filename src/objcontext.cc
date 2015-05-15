@@ -48,7 +48,7 @@ void V8ObjectContext::Export(
 
 void V8ObjectContext::Export(
     const char * export_name,
-    void (*obj_generator)(Handle<V8ObjectContext>)) {
+    v8_obj_generator obj_generator) {
   Handle<V8ObjectContext> new_object_ctx = V8ObjectContext::New();
 
   obj_generator(new_object_ctx);
@@ -85,7 +85,7 @@ void JSCObjectContext::Export(const char * export_name, jsc_func func) {
 
 void JSCObjectContext::Export(
     const char * export_name,
-    void (*obj_generator)(Handle<JSCObjectContext>)) {
+    jsc_obj_generator obj_generator) {
   Handle<JSCObjectContext> new_object_ctx = JSCObjectContext::New(context_ref_);
   obj_generator(new_object_ctx);
   new_object_ctx->Build(export_name);
