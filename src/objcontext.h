@@ -59,7 +59,7 @@ class V8ObjectContext {
 
 
 #define BASTIAN_OBJ(ObjName) \
-void ObjName(bastian::Handle<bastian::V8ObjectContext> ctx)
+void ObjName(bastian::Handle<bastian::V8ObjectContext> obj)
 
 #endif
 
@@ -118,7 +118,7 @@ class JSCObjectContext {
 
 
 #define BASTIAN_OBJ(ObjName) \
-void ObjName(bastian::Handle<bastian::JSCObjectContext> ctx)
+void ObjName(bastian::Handle<bastian::JSCObjectContext> obj)
 
 #endif
 

@@ -16,28 +16,28 @@ static int argsCount = 0;
 static bastian::Handle<bastian::Value> result = bastian::NullValue::New();
 
 BASTIAN_FUNC(CountArgs) {
-  argsCount = ctx->ArgsCount();
+  argsCount = func->ArgsCount();
 }
 
 BASTIAN_FUNC(Add) {
-  double val1 = ctx->GetArgument(0)->NumberValue();
-  double val2 = ctx->GetArgument(1)->NumberValue();
+  double val1 = func->GetArgument(0)->NumberValue();
+  double val2 = func->GetArgument(1)->NumberValue();
   bastian::Handle<bastian::Value> total = bastian::Number::New(val1 + val2);
 
-  ctx->SetResult(total);
+  func->SetResult(total);
 }
 
 BASTIAN_FUNC(Concat) {
-  std::string str1 = ctx->GetArgument(0)->StringValue();
-  std::string str2 = ctx->GetArgument(1)->StringValue();
+  std::string str1 = func->GetArgument(0)->StringValue();
+  std::string str2 = func->GetArgument(1)->StringValue();
   bastian::Handle<bastian::Value> concat = bastian::String::New(str1 + str2);
 
-  ctx->SetResult(concat);
+  func->SetResult(concat);
 }
 
 
 BASTIAN_FUNC(CollectFContextResult) {
-  result = ctx->GetArgument(0);
+  result = func->GetArgument(0);
 }
 
 TEST(FUNCTION_CONTEXT_TEST_SUITE, CountArgs) {

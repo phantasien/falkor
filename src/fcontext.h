@@ -63,7 +63,7 @@ class V8FunctionContext : FunctionContext {
 
 #define BASTIAN_FUNC(FuncName) \
 void WRAPPED_FUNC_NAME(FuncName)( \
-  bastian::Handle<bastian::V8FunctionContext> ctx); \
+  bastian::Handle<bastian::V8FunctionContext> func); \
 void FuncName(const v8::FunctionCallbackInfo<v8::Value>& infos) { \
   v8::HandleScope handle_scope(v8::Isolate::GetCurrent()); \
   bastian::Handle<bastian::V8FunctionContext> ctx \
@@ -71,7 +71,7 @@ void FuncName(const v8::FunctionCallbackInfo<v8::Value>& infos) { \
   WRAPPED_FUNC_NAME(FuncName)(ctx); \
 } \
 void WRAPPED_FUNC_NAME(FuncName)( \
-  bastian::Handle<bastian::V8FunctionContext> ctx)
+  bastian::Handle<bastian::V8FunctionContext> func)
 
 
 #endif
@@ -118,7 +118,7 @@ class JSCFunctionContext : FunctionContext {
 
 #define BASTIAN_FUNC(FuncName) \
 void WRAPPED_FUNC_NAME(FuncName)( \
-  bastian::Handle<bastian::JSCFunctionContext> ctx); \
+  bastian::Handle<bastian::JSCFunctionContext> func); \
 JSValueRef FuncName( \
     JSContextRef context_ref, \
     JSObjectRef function_ref, \
@@ -138,7 +138,7 @@ JSValueRef FuncName( \
   return ctx->ResultRef(); \
 } \
 void WRAPPED_FUNC_NAME(FuncName)( \
-  bastian::Handle<bastian::JSCFunctionContext> ctx)
+  bastian::Handle<bastian::JSCFunctionContext> func)
 
 #endif
 

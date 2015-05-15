@@ -12,16 +12,16 @@
 static bastian::Handle<bastian::Value> result = bastian::NullValue::New();
 
 BASTIAN_FUNC(CollectEngineResult) {
-  result = ctx->GetArgument(0);
+  result = func->GetArgument(0);
 }
 
 BASTIAN_OBJ(Util) {
-  ctx->Export("collect", CollectEngineResult);
+  obj->Export("collect", CollectEngineResult);
 }
 
 BASTIAN_OBJ(Global) {
-  ctx->Export("collect", CollectEngineResult);
-  ctx->Export("util", Util);
+  obj->Export("collect", CollectEngineResult);
+  obj->Export("util", Util);
 }
 
 TEST(FUNCTION_CONTEXT_TEST_SUITE, GlobalFunction) {

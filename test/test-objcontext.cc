@@ -15,15 +15,15 @@
 static bastian::Handle<bastian::Value> result = bastian::NullValue::New();
 
 BASTIAN_FUNC(CollectObjContextResult) {
-  result = ctx->GetArgument(0);
+  result = func->GetArgument(0);
 }
 
 BASTIAN_OBJ(Child) {
-  ctx->Export("collect", CollectObjContextResult);
+  obj->Export("collect", CollectObjContextResult);
 }
 
 BASTIAN_OBJ(Wrapper) {
-  ctx->Export("child", Child); 
+  obj->Export("child", Child); 
 }
 
 #ifdef BASTIAN_JSC
