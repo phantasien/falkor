@@ -93,7 +93,7 @@ test-v8: test/v8/run
 test: test-v8 test-jsc
 
 lint:
-	@python deps/cpplint.py --root=src --slug=mnc ${BASTIAN_SRC} ${BASTIAN_HEADERS}
+	@python deps/cpplint.py --root=src --slug=bastian ${BASTIAN_SRC} ${BASTIAN_HEADERS}
 
 deps/v8:
 	@mkdir -p deps
