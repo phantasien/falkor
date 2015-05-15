@@ -1,6 +1,6 @@
 *.o
 *.a
+*.xcodeproj
 config.log
-test/*/run
 deps/gtest/cbuild
-
+build
