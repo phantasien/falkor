@@ -61,6 +61,7 @@ class V8FunctionContext : FunctionContext {
 #define BASTIAN_FUNC(FuncName) \
 void WRAPPED_FUNC_NAME(FuncName)(bastian::V8FunctionContext* ctx); \
 void FuncName(const v8::FunctionCallbackInfo<v8::Value>& infos) { \
+  v8::HandleScope handle_scope(v8::Isolate::GetCurrent()); \
   bastian::V8FunctionContext* ctx = new bastian::V8FunctionContext(infos); \
   WRAPPED_FUNC_NAME(FuncName)(ctx); \
 } \
