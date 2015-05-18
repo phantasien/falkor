@@ -5,5 +5,5 @@ clean:
 	@rm -rf out
 
 test-v8:
-	@./tools/gyp_bastian bastian.gyp -Dhost_arch=ia32
+	@./tools/gyp_bastian bastian.gyp -Dhost_arch=x64
 	@make -C out
