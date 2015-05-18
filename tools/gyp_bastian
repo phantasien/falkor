@@ -42,7 +42,7 @@ if __name__ == '__main__':
   args.append('--generator-output=' + OUTPUT_DIR)
   args.append('-Goutput_dir=' + OUTPUT_DIR)
   args.append('-Dcomponent=static_library')
+  args.append('-Dv8_enable_i18n_support=0')
   args.append('-Dlibrary=static_library')
   args.append('--format=make')
-
   run_gyp(args)
