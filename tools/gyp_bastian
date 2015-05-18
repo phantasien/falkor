@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+
+
+import glob
+import os
+import platform
+import re
+import shlex
+import subprocess
+import sys
+
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+BASTIAN_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))
+V8_ROOT = os.path.join(BASTIAN_ROOT, 'deps', 'v8')
+PROJECT_ROOT = os.environ.get('BASTIAN_PROJECT_ROOT', BASTIAN_ROOT)
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, 'out')
+
+
+def run_gyp(args):
+  import gyp
+
+  rc = gyp.main(args)
+
+  if rc != 0:
+    print 'Error running GYP'
+    sys.exit(rc)
+
+
+if __name__ == '__main__':
+  args = sys.argv[1:]
+
+  # Set up GYP and V8 env scripts paths
+
+  sys.path.append(os.path.join(BASTIAN_ROOT, 'tools', 'gyp', 'pylib'))
+  sys.path.append(os.path.join(V8_ROOT, 'build'))
+
+  # Specialize gyp call for Bastian  
+
+  args.append('-I' + os.path.join(V8_ROOT, 'build', 'standalone.gypi'))
+  args.append('--depth=' + os.path.relpath(BASTIAN_ROOT))
+  args.append('--generator-output=' + OUTPUT_DIR)
+  args.append('-Goutput_dir=' + OUTPUT_DIR)
+  args.append('-Dcomponent=static_library')
+  args.append('-Dlibrary=static_library')
+  args.append('--format=make')
+
+  run_gyp(args)
