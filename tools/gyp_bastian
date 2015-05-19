@@ -37,10 +37,10 @@ if __name__ == '__main__':
 
   # Specialize gyp call for Bastian  
 
-  if sys.platform == 'linux':
+  if sys.platform.startswith('linux'):
     args.append('-Dbastian_sub_dir=/obj.target')
   else:
-    args.append('-Dbastian_sub_dir=/')
+    args.append('-Dbastian_sub_dir=')
 
   args.append('-I' + os.path.join(V8_ROOT, 'build', 'standalone.gypi'))
   args.append('--depth=' + os.path.relpath(BASTIAN_ROOT))
