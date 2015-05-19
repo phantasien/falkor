@@ -9,7 +9,7 @@
         './deps/v8/include'
       ],
       'libraries': [
-        '<(PRODUCT_DIR)/libbastian.a',
+        '<(PRODUCT_DIR)<(bastian_sub_dir)/libbastian.a',
       ],
       'sources': [
         './testme.cc'
