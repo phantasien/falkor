@@ -9,24 +9,32 @@ SYS_NAME_LOWER := $(call lowercase,${SYS_NAME})
 
 ifeq (${SYS_NAME_LOWER},linux)
 	SYS_CMAKE_FLAGS :=
+	RUN_TEST := ./out/Debug/obj.target/test-bastian
 else
 	SYS_CMAKE_FLAGS := -DCMAKE_CXX_FLAGS="-std=c++11 -stdlib=libstdc++ -U__STRICT_ANSI__"
+	RUN_TEST := ./out/Debug/test-bastian
 endif
 
 
 clean:
-	@rm -rf out
+	@rm -rf out/Debug/obj.target/bastian
+	@rm -rf ${RUN_TEST}
 
-lib-v8:
-	@./tools/gyp_bastian bastian.gyp -Dhost_arch=x64
+test-v8: clean ${GTEST_LIBS_PATH}
+	@./tools/gyp_bastian test/test.gyp -Dbastian_engine=v8 -Dhost_arch=x64
 	@make -C out
+	@${RUN_TEST}
 
-test/v8/run: ${GTEST_LIBS_PATH} lib-v8
-	@g++ -o test/v8/run -L${CURDIR}/${GTEST_LIBS_PATH} -lgtest -lgtest_main
+test-jsc: clean ${GTEST_LIBS_PATH}
+	@./tools/gyp_bastian test/test.gyp -Dbastian_engine=jsc -Dhost_arch=x64
+	@make -C out
+	@${RUN_TEST}
 
-test-v8: test/v8/run
-	@./test/v8/run
+test: test-v8 test-jsc
 
 ${GTEST_LIBS_PATH}:
 	@mkdir ${GTEST_LIBS_PATH}
 	@cd ${GTEST_LIBS_PATH} && cmake -G"Unix Makefiles" ${SYS_CMAKE_FLAGS} .. && make
+
+
+.PHONY: test
