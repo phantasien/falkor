@@ -9,7 +9,7 @@
         './deps/v8/include'
       ],
       'libraries': [
-        '<(output_dir)/Debug/libbastian.a',
+        '<(PRODUCT_DIR)/libbastian.a',
       ],
       'sources': [
         './testme.cc'
@@ -36,10 +36,10 @@
         './deps/v8/tools/gyp/v8.gyp:v8'
       ],
       'libraries': [
-        '<(output_dir)/Debug/obj.target/deps/v8/tools/gyp/libv8_libbase.a',
-        '<(output_dir)/Debug/obj.target/deps/v8/tools/gyp/libv8_snapshot.a',
-        '<(output_dir)/Debug/obj.target/deps/v8/tools/gyp/libv8_libplatform.a',
-        '<(output_dir)/Debug/obj.target/deps/v8/tools/gyp/libv8_base.a'
+        '<(PRODUCT_DIR)/obj.target/deps/v8/tools/gyp/libv8_libbase.a',
+        '<(PRODUCT_DIR)/obj.target/deps/v8/tools/gyp/libv8_snapshot.a',
+        '<(PRODUCT_DIR)/obj.target/deps/v8/tools/gyp/libv8_libplatform.a',
+        '<(PRODUCT_DIR)/obj.target/deps/v8/tools/gyp/libv8_base.a'
       ],
       'sources': [
         'src/engine.cc',
