@@ -9,7 +9,7 @@
         './deps/v8/include'
       ],
       'libraries': [
-        '/home/dawi/projects/phantasien/bastian/out/Debug/obj.target/libbastian.a',
+        '<(output_dir)/Debug/libbastian.a',
       ],
       'sources': [
         './testme.cc'
@@ -36,10 +36,10 @@
         './deps/v8/tools/gyp/v8.gyp:v8'
       ],
       'libraries': [
-        './out/Debug/obj.target/deps/v8/tools/gyp/libv8_libbase.a',
-        './out/Debug/obj.target/deps/v8/tools/gyp/libv8_snapshot.a',
-        './out/Debug/obj.target/deps/v8/tools/gyp/libv8_libplatform.a',
-        './out/Debug/obj.target/deps/v8/tools/gyp/libv8_base.a'
+        '<(output_dir)/Debug/obj.target/deps/v8/tools/gyp/libv8_libbase.a',
+        '<(output_dir)/Debug/obj.target/deps/v8/tools/gyp/libv8_snapshot.a',
+        '<(output_dir)/Debug/obj.target/deps/v8/tools/gyp/libv8_libplatform.a',
+        '<(output_dir)/Debug/obj.target/deps/v8/tools/gyp/libv8_base.a'
       ],
       'sources': [
         'src/engine.cc',
