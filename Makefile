@@ -5,7 +5,7 @@ lowercase = $(shell echo $1 | tr A-Z a-z)
 GTEST_LIBS_PATH := deps/gtest/cbuild
 SYS_NAME := $(shell uname -s)
 SYS_NAME_LOWER := $(call lowercase,${SYS_NAME})
-RUN_TEST := ./out/Debug/test-bastian
+
 
 ifeq (${SYS_NAME_LOWER},linux)
 	SYS_CMAKE_FLAGS :=
@@ -18,15 +18,19 @@ clean:
 	@rm -rf out/Debug/obj.target/bastian
 	@rm -rf ${RUN_TEST}
 
-test-v8: clean ${GTEST_LIBS_PATH}
-	@./tools/gyp_bastian test/test.gyp -Dbastian_engine=v8 -Dhost_arch=x64
-	@make -C out
-	@${RUN_TEST}
+./out/v8-x64/Debug/test-bastian: ${GTEST_LIBS_PATH}
+	@./tools/gyp_bastian test/test.gyp -Dbastian_engine=v8 -Dtarget_arch=x64
+	@make -C out/v8-x64
 
-test-jsc: clean ${GTEST_LIBS_PATH}
-	@./tools/gyp_bastian test/test.gyp -Dbastian_engine=jsc -Dhost_arch=x64
-	@make -C out
-	@${RUN_TEST}
+test-v8: ./out/v8-x64/Debug/test-bastian
+	@./out/v8-x64/Debug/test-bastian
+
+./out/jsc-x64/Debug/test-bastian: ${GTEST_LIBS_PATH}
+	@./tools/gyp_bastian test/test.gyp -Dbastian_engine=jsc -Dtarget_arch=x64
+	@make -C out/jsc-x64
+
+test-jsc: ./out/jsc-x64/Debug/test-bastian
+	@./out/jsc-x64/Debug/test-bastian
 
 test: test-v8 test-jsc
 

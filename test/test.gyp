@@ -13,8 +13,8 @@
         '../bastian.gyp:bastian'
       ],
       'libraries': [
-        '../deps/gtest/cbuild/libgtest.a',
-        '../deps/gtest/cbuild/libgtest_main.a',
+        '../../deps/gtest/cbuild/libgtest.a',
+        '../../deps/gtest/cbuild/libgtest_main.a',
       ],
       'sources': [
         './test-engine.cc',
