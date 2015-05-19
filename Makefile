@@ -5,14 +5,12 @@ lowercase = $(shell echo $1 | tr A-Z a-z)
 GTEST_LIBS_PATH := deps/gtest/cbuild
 SYS_NAME := $(shell uname -s)
 SYS_NAME_LOWER := $(call lowercase,${SYS_NAME})
-
+RUN_TEST := ./out/Debug/test-bastian
 
 ifeq (${SYS_NAME_LOWER},linux)
 	SYS_CMAKE_FLAGS :=
-	RUN_TEST := ./out/Debug/obj.target/test-bastian
 else
 	SYS_CMAKE_FLAGS := -DCMAKE_CXX_FLAGS="-std=c++11 -stdlib=libstdc++ -U__STRICT_ANSI__"
-	RUN_TEST := ./out/Debug/test-bastian
 endif
 
 
