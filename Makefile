@@ -12,6 +12,10 @@ ANDROID_NDK_PREBUILT = ${ANDROID_NDK_ROOT}/toolchains/arm-linux-androideabi-4.8/
 test: test-android
 
 test-android: deps/bastian/out/v8-android_arm
+	@cd test/android && \
+	V8_HOME=${CURDIR}/deps/bastian/deps/v8 \
+	BASTIAN_LIBS_PATH=${CURDIR}/deps/bastian/out/v8-android_arm/Debug/obj.target \
+	${ANDROID_NDK_ROOT}/ndk-build
 	@ant -q -f ./test/android/build.xml debug -Dsdk.dir=${ANDROID_HOME}
 
 deps/bastian/out/v8-android_arm:
