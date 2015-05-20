@@ -39,6 +39,8 @@ if __name__ == '__main__':
   ctx = {}
   args = [parse_arg(ctx, arg) for arg in sys.argv[1:]]
 
+  make_format = 'make'
+
   if not 'target_arch' in ctx:
     print 'Error: target_arch is not defined'
     sys.exit(1)
@@ -51,6 +53,21 @@ if __name__ == '__main__':
     ctx['bastian_engine'],
     ctx['target_arch']
   )
+
+  if ctx['OS'] == 'android':
+    make_format = 'make-android'
+    intermediate_dir = '%s-android_%s' % (
+      ctx['bastian_engine'],
+      ctx['target_arch']
+    )
+    args.append('-I' + os.path.join(V8_ROOT, 'build', 'android.gypi'))
+    args.append('-Dv8_target_arch=' + ctx['target_arch'])
+    args.append('-Dandroid_target_arch=' + ctx['target_arch'])
+    args.append('-Dv8_enable_backtrace=1')
+    args.append('-Darm_fpu=default')
+    args.append('-Darm_float_abi=default')
+    args.append('-Darm_neon=0')
+
 
   output_dir = os.path.join(OUTPUT_DIR, intermediate_dir)
 
@@ -75,5 +92,5 @@ if __name__ == '__main__':
   args.append('-Dv8_enable_i18n_support=0')
   args.append('-Dlibrary=static_library')
 
-  args.append('--format=make')
+  args.append('--format=' + make_format)
   run_gyp(args)
