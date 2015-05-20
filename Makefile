@@ -12,6 +12,7 @@ ANDROID_NDK_PREBUILT = ${ANDROID_NDK_ROOT}/toolchains/arm-linux-androideabi-4.8/
 test: test-android
 
 test-android: deps/bastian/out/v8-android_arm
+	@ant -q -f ./test/android/build.xml debug -Dsdk.dir=${ANDROID_HOME}
 
 deps/bastian/out/v8-android_arm:
 	@cd deps/bastian && CC="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-gcc" \
