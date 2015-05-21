@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
   # Set up GYP and V8 env scripts paths
 
-  sys.path.append(os.path.join(ctx['bastian_project'], 'tools', 'gyp', 'pylib'))
+  sys.path.append(os.path.join(BASTIAN_ROOT, 'tools', 'gyp', 'pylib'))
   sys.path.append(os.path.join(V8_ROOT, 'build'))
 
   # Specialize gyp call for Bastian  
