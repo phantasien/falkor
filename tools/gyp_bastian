@@ -39,10 +39,6 @@ if __name__ == '__main__':
     parse_arg(ctx, arg) for arg in sys.argv[1:]
   ] if arg is not None]
 
-  if not 'target_arch' in ctx:
-    print 'Error: target_arch is not defined'
-    sys.exit(1)
-
   if not 'bastian_engine' in ctx:
     print 'Error: bastian_engine is not defined'
     sys.exit(1)
@@ -53,10 +49,20 @@ if __name__ == '__main__':
 
   make_format = 'make'
 
-  intermediate_dir = '%s-%s' % (
-    ctx['bastian_engine'],
-    ctx['target_arch']
-  )
+  if ctx.get('OS', '').startswith('ios'):
+    make_format = 'xcode'
+    intermediate_dir = '%s-%s' % (
+      ctx['bastian_engine'],
+      ctx['OS']
+    )
+  else:
+    if not 'target_arch' in ctx:
+      print 'Error: target_arch is not defined'
+      sys.exit(1)
+    intermediate_dir = '%s-%s' % (
+      ctx['bastian_engine'],
+      ctx['target_arch']
+    )
 
   if ctx.get('OS', None) == 'android':
     make_format = 'make-android'
