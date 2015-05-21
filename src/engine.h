@@ -25,9 +25,9 @@
 
 namespace falkor {
 
-class Engine {
+class FalkorEngine {
  public:
-  Engine();
+  FalkorEngine();
   void Run(const std::string& source);
 
  private:

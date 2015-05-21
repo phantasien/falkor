@@ -31,6 +31,7 @@ BASTIAN_OBJ(Global) {
   obj->Export("print", Print);
 }
 
+
 namespace falkor {
 
 Engine::Engine() {
@@ -38,7 +39,7 @@ Engine::Engine() {
 }
 
 void Engine::Run(const std::string& source) {
-  bastian_engine_->run(source);
+  bastian_engine_->Run(source);
 }
 
 }  // namespace falkor

@@ -20,16 +20,15 @@ test-android: deps/bastian/out/v8-android_arm
 	${ANDROID_NDK_ROOT}/ndk-build
 	@ant -q -f ./test/android/build.xml debug -Dsdk.dir=${ANDROID_HOME}
 
-deps/bastian/out/v8-android_arm:
-	@cd deps/bastian && \
-	CC="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-gcc" \
+out/v8-android_arm:
+	@CC="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-gcc" \
 	CXX="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-g++" \
-	${GYP} -Dbastian_engine=v8 -Dtarget_arch=arm \
+	${GYP} -Dbastian_project=${CURDIR} -Dbastian_engine=v8 -Dtarget_arch=arm \
 	       -Dandroid_target_platform=15 \
  	       -Darm_version=7 -Dhost_os=mac -DOS=android \
-	       bastian.gyp
+	       falkor.gyp
 	@AR="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ar" \
 	RANLIB="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ranlib" \
-	make -C deps/bastian/out/v8-android_arm
+	make -C out/v8-android_arm
 
 .PHONY: test

@@ -21,6 +21,6 @@
 #ifndef FALKOR_ROOT_H_
 #define FALKOR_ROOT_H_
 
-#include "src/engine.h"
+#include "../src/engine.h"
 
 #endif
