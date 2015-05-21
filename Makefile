@@ -24,12 +24,12 @@ deps/bastian/out/v8-android_arm:
 	@cd deps/bastian && \
 	CC="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-gcc" \
 	CXX="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-g++" \
-	AR="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ar" \
-	RANLIB="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ranlib" \
 	${GYP} -Dbastian_engine=v8 -Dtarget_arch=arm \
 	       -Dandroid_target_platform=15 \
  	       -Darm_version=7 -Dhost_os=mac -DOS=android \
 	       bastian.gyp
-	@make -C deps/bastian/out/v8-android_arm
+	@AR="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ar" \
+	RANLIB="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ranlib" \
+	make -C deps/bastian/out/v8-android_arm
 
 .PHONY: test
