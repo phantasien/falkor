@@ -21,7 +21,7 @@
               '$(SDKROOT)/System/Library/Frameworks/JavascriptCore.framework',
             ],
           },
-        }],
+        }]
       ],
       'sources': [
         'src/engine.cc',
