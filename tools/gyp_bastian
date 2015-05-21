@@ -14,9 +14,7 @@ import sys
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 BASTIAN_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))
 V8_ROOT = os.path.join(BASTIAN_ROOT, 'deps', 'v8')
-PROJECT_ROOT = os.environ.get('BASTIAN_PROJECT_ROOT', BASTIAN_ROOT)
-OUTPUT_DIR = os.path.join(PROJECT_ROOT, 'out')
-GYP_DEFINE_PATTERN = re.compile(r'\-D([\w_]+)=([\w_]+)')
+GYP_DEFINE_PATTERN = re.compile(r'\-D([\w_]+)=(.+)')
 
 def run_gyp(args):
   import gyp
@@ -29,7 +27,7 @@ def run_gyp(args):
 
 def parse_arg(ctx, arg):
   def_match = GYP_DEFINE_PATTERN.match(arg)
-  
+
   if def_match is not None:
     ctx[def_match.group(1)] = def_match.group(2)
 
@@ -37,9 +35,9 @@ def parse_arg(ctx, arg):
 
 if __name__ == '__main__':
   ctx = {}
-  args = [parse_arg(ctx, arg) for arg in sys.argv[1:]]
-
-  make_format = 'make'
+  args = [arg for arg in [
+    parse_arg(ctx, arg) for arg in sys.argv[1:]
+  ] if arg is not None]
 
   if not 'target_arch' in ctx:
     print 'Error: target_arch is not defined'
@@ -49,12 +47,18 @@ if __name__ == '__main__':
     print 'Error: bastian_engine is not defined'
     sys.exit(1)
 
+  if not 'bastian_project' in ctx:
+    print 'Error: bastian_project is not defined'
+    sys.exit(1)
+
+  make_format = 'make'
+
   intermediate_dir = '%s-%s' % (
     ctx['bastian_engine'],
     ctx['target_arch']
   )
 
-  if ctx['OS'] == 'android':
+  if ctx.get('OS', None) == 'android':
     make_format = 'make-android'
     intermediate_dir = '%s-android_%s' % (
       ctx['bastian_engine'],
@@ -68,12 +72,11 @@ if __name__ == '__main__':
     args.append('-Darm_float_abi=default')
     args.append('-Darm_neon=0')
 
-
-  output_dir = os.path.join(OUTPUT_DIR, intermediate_dir)
+  output_dir = os.path.join(ctx['bastian_project'], 'out', intermediate_dir)
 
   # Set up GYP and V8 env scripts paths
 
-  sys.path.append(os.path.join(BASTIAN_ROOT, 'tools', 'gyp', 'pylib'))
+  sys.path.append(os.path.join(ctx['bastian_project'], 'tools', 'gyp', 'pylib'))
   sys.path.append(os.path.join(V8_ROOT, 'build'))
 
   # Specialize gyp call for Bastian  
@@ -84,7 +87,7 @@ if __name__ == '__main__':
     args.append('-Dbastian_sub_dir=')
 
   args.append('-I' + os.path.join(V8_ROOT, 'build', 'standalone.gypi'))
-  args.append('--depth=' + os.path.relpath(BASTIAN_ROOT))
+  args.append('--depth=' + os.path.relpath(ctx['bastian_project']))
   args.append('--generator-output=' + output_dir)
   args.append('-Goutput_dir=' + output_dir)
   args.append('-Doutput_dir=' + output_dir)

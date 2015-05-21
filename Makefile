@@ -19,14 +19,14 @@ clean:
 	@rm -rf ${RUN_TEST}
 
 ./out/v8-x64/Debug/test-bastian: ${GTEST_LIBS_PATH}
-	@./tools/gyp_bastian test/test.gyp -Dbastian_engine=v8 -Dtarget_arch=x64
+	@./tools/gyp_bastian test/test.gyp -Dbastian_project=${CURDIR} -Dbastian_engine=v8 -Dtarget_arch=x64
 	@make -C out/v8-x64
 
 test-v8: ./out/v8-x64/Debug/test-bastian
 	@./out/v8-x64/Debug/test-bastian
 
 ./out/jsc-x64/Debug/test-bastian: ${GTEST_LIBS_PATH}
-	@./tools/gyp_bastian test/test.gyp -Dbastian_engine=jsc -Dtarget_arch=x64
+	@./tools/gyp_bastian test/test.gyp -Dbastian_project=${CURDIR} -Dbastian_engine=jsc -Dtarget_arch=x64
 	@make -C out/jsc-x64
 
 test-jsc: ./out/jsc-x64/Debug/test-bastian

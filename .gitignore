@@ -5,3 +5,4 @@ config.log
 deps/gtest/cbuild
 build
 out
+.DS_Store
