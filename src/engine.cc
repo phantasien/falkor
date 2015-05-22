@@ -18,8 +18,8 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "src/engine.h"
-#include <bastian.h>
+#include "./engine.h"
+
 #include <iostream>
 
 
@@ -34,12 +34,11 @@ BASTIAN_OBJ(Global) {
 
 namespace falkor {
 
-Engine::Engine() {
-  bastian_engine_ = bastian::Engine::New(Global);
+Engine::Engine() : bastian_engine_(bastian::Engine::New(Global)) {
 }
 
 void Engine::Run(const std::string& source) {
-  bastian_engine_->Run(source);
+  bastian_engine_->Run(source.c_str());
 }
 
 }  // namespace falkor

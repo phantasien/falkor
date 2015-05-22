@@ -22,12 +22,13 @@
 #define FALKOR_ENGINE_H_
 
 #include <string>
+#include <bastian.h>
 
 namespace falkor {
 
-class FalkorEngine {
+class Engine {
  public:
-  FalkorEngine();
+  Engine();
   void Run(const std::string& source);
 
  private:
@@ -35,3 +36,5 @@ class FalkorEngine {
 };
 
 }  // namespace falkor
+
+#endif  // FALKOR_ENGINE_H_
