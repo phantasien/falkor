@@ -27,10 +27,5 @@
         'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
       },
     }],
-  ],
-  'include_dirs': [
-    '.',
-    './include',
-    './deps/v8/include'
   ]
 }

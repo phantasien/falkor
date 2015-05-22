@@ -22,8 +22,8 @@
 #define BASTIAN_FCONTEXT_H_
 
 #include <vector>
-#include "src/handle.h"
-#include "src/value.h"
+#include "./handle.h"
+#include "./value.h"
 
 
 namespace bastian {

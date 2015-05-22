@@ -20,7 +20,7 @@
 
 
 #include <iostream>
-#include "src/objcontext.h"
+#include "./objcontext.h"
 
 namespace bastian {
 

@@ -29,8 +29,8 @@
 #include <JavascriptCore/JavascriptCore.h>
 #endif
 
-#include "src/handle.h"
-#include "src/objcontext.h"
+#include "./handle.h"
+#include "./objcontext.h"
 
 
 namespace bastian {

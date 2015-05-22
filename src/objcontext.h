@@ -22,8 +22,8 @@
 #define BASTIAN_OBJCONTEXT_H_
 
 #include <vector>
-#include "src/fcontext.h"
-#include "src/handle.h"
+#include "./fcontext.h"
+#include "./handle.h"
 
 namespace bastian {
 

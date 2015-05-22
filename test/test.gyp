@@ -7,7 +7,8 @@
         '../common.gypi',
       ],
       'include_dirs': [
-        '../deps/gtest/include'
+        '../deps/gtest/include',
+        '../include'
       ],
       'dependencies': [
         '../bastian.gyp:bastian'

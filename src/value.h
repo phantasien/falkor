@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include "src/handle.h"
+#include "./handle.h"
 
 #ifdef BASTIAN_V8
 #include <v8.h>
