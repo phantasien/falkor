@@ -27,7 +27,7 @@ out/v8-android_arm:
 	CXX="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-g++" \
 	${GYP} -Dbastian_project=${CURDIR} -Dbastian_engine=v8 -Dtarget_arch=arm \
 	       -Dandroid_target_platform=15 \
- 	       -Darm_version=7 -Dhost_os=mac -DOS=android \
+ 	       -Darm_version=7 -DOS=android \
 	       falkor.gyp
 	@AR="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ar" \
 	RANLIB="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ranlib" \

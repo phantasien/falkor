@@ -37,8 +37,8 @@ namespace falkor {
 Engine::Engine() : bastian_engine_(bastian::Engine::New(Global)) {
 }
 
-void Engine::Run(const std::string& source) {
-  bastian_engine_->Run(source.c_str());
+void Engine::Run(const char* source) {
+  bastian_engine_->Run(source);
 }
 
 }  // namespace falkor

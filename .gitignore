@@ -3,3 +3,4 @@ test/android/bin
 test/android/gen
 test/android/obj
 test/android/libs
+build

@@ -29,7 +29,7 @@ namespace falkor {
 class Engine {
  public:
   Engine();
-  void Run(const std::string& source);
+  void Run(const char* source);
 
  private:
   bastian::Handle<bastian::Engine> bastian_engine_;
