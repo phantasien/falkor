@@ -22,7 +22,7 @@ test-android: out/v8-android_arm
 	${ANDROID_NDK_ROOT}/ndk-build
 	@ant -q -f ./test/android/build.xml debug -Dsdk.dir=${ANDROID_HOME}
 	@$(ANDROID_HOME)/platform-tools/adb install -r test/android/bin/falkor_android_test-debug-unaligned.apk 
-	@$(ANDROID_HOME)/platform-tools/adb logcat -s "Falkor Test" 
+	#@$(ANDROID_HOME)/platform-tools/adb logcat -s "Falkor Test" 
 
 out/v8-android_arm:
 	@CC="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-gcc" \

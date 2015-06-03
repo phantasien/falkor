@@ -2,6 +2,8 @@
 #include <jni.h>
 #include <falkor.h>
 #include <android/log.h>
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
 
 class androidbuf : public std::streambuf {
 public:
@@ -35,9 +37,17 @@ private:
     char buffer[bufsize];
 };
 
-extern "C" JNIEXPORT void JNICALL Java_com_github_phantasien_falkor_test_FalkorTestMainActivity_run(JNIEnv* env, jobject thiz, jstring jsource) {
-  std::cout.rdbuf(new androidbuf);
-  falkor::Engine engine;
-
-  engine.Run("print('Hello World !')");
+extern "C" JNIEXPORT void JNICALL Java_com_github_phantasien_falkor_test_FalkorTestMainActivity_run(JNIEnv* env, jobject thiz, jobject assetManager) {
+    AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+    AAsset* asset = AAssetManager_open(mgr, "hello.js", AASSET_MODE_UNKNOWN);
+    if (NULL == asset) {
+        __android_log_print(ANDROID_LOG_ERROR, "Falkor Test", "_ASSET_NOT_FOUND_");
+        return;
+    }
+    long size = AAsset_getLength(asset);
+    char* buffer = (char*) malloc (sizeof(char)*size);
+    AAsset_read(asset, buffer, size);
+    __android_log_print(ANDROID_LOG_INFO, "Falkor Test", "%s", (const char *) buffer);
+    AAsset_close(asset);
+    free(buffer);
 }
