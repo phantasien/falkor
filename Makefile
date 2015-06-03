@@ -11,7 +11,7 @@ ANDROID_NDK_PREBUILT = ${ANDROID_NDK_ROOT}/toolchains/arm-linux-androideabi-4.8/
 
 test: test-android
 
-test-android: deps/bastian/out/v8-android_arm
+test-android: out/v8-android_arm
 	@cd test/android && \
 	V8_HOME=${CURDIR}/deps/bastian/deps/v8 \
 	V8_LIBS_PATH=${CURDIR}/out/v8-android_arm/Debug/obj.target/deps/bastian/deps/v8/tools/gyp \
@@ -21,6 +21,8 @@ test-android: deps/bastian/out/v8-android_arm
 	FALKOR_LIBS_PATH=${CURDIR}/out/v8-android_arm/Debug/obj.target \
 	${ANDROID_NDK_ROOT}/ndk-build
 	@ant -q -f ./test/android/build.xml debug -Dsdk.dir=${ANDROID_HOME}
+	@$(ANDROID_HOME)/platform-tools/adb install -r test/android/bin/falkor_android_test-debug-unaligned.apk 
+	@$(ANDROID_HOME)/platform-tools/adb logcat -s "Falkor Test" 
 
 out/v8-android_arm:
 	@CC="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-gcc" \
