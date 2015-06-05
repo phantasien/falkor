@@ -15,6 +15,7 @@
       ],
       'sources': [
         'src/engine.cc',
+        'src/file.cc',
       ]
     }
   ]

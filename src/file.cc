@@ -18,25 +18,48 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef FALKOR_ENGINE_H_
-#define FALKOR_ENGINE_H_
 
-#include "./engine.h"
+#include "./file.h"
 
-#include <string>
-#include <bastian.h>
+#include <regex>
+
 
 namespace falkor {
 
-class Engine {
- public:
-  Engine();
-  void Run(const char* source);
+bastian::Handle<File> File::Open(const std::string& uri, const std::string& mode) {
+  bastian::Handle<File> file(NULL);
+  std::regex uri_regex("^(\\w+)://(.+)$");
+  std::smatch match;
 
- private:
-  bastian::Handle<bastian::Engine> bastian_engine_;
+  if (std::regex_match(uri, uri_regex)) {
+    std::string protocol = match.str(1);
+    std::string path = match.str(2);
+
+    if (protocol == "bundle") {
+      file = BundleFile::New(path);
+      file.Open(mode);
+    }
+  }
+
+  return file;
+}
+
+
+#ifdef FALKOR_ANDROID
+
+bastian::Handle<File> BundleFile::New(const std::string& path) {
+  bastian::Handle<File> handle(new AndroidBundleFile(path));
+  return handle;
+}
+
+AndroidBundleFile::AndroidBundleFile(const std::string& path) : path_(path) {}
+
+bool AndroidBundleFile::Open(const std::string& mode) {
+  return false;
+}
+
 };
+#endif
+
 
 }  // namespace falkor
-
-#endif  // FALKOR_ENGINE_H_

@@ -18,25 +18,46 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef FALKOR_ENGINE_H_
-#define FALKOR_ENGINE_H_
-
-#include "./engine.h"
+#ifndef FALKOR_FILE_H_
+#define FALKOR_FILE_H_
 
 #include <string>
 #include <bastian.h>
 
+#ifdef FALKOR_ANDROID
+
+#endif
+
 namespace falkor {
 
-class Engine {
- public:
-  Engine();
-  void Run(const char* source);
 
- private:
-  bastian::Handle<bastian::Engine> bastian_engine_;
+class File {
+ public:
+  static bastian::Handle<File> Open(const std::string& uri, const std::string& mode);
+
+ protected:
+  virtual ~File();
+  virtual bool Open(const std::string& mode);
 };
+
+
+class BundleFile : File {
+ public:
+  static bastian::Handle<File> New(const std::string& path);
+ protected:
+  std::string path_;
+};
+
+
+#ifdef FALKOR_ANDROID
+class AndroidBundleFile : BundleFile {
+  public:
+    explicit AndroidBundleFile(const std::string& path);
+    bool Open(const std::string& mode);
+};
+#endif
+
 
 }  // namespace falkor
 
-#endif  // FALKOR_ENGINE_H_
+#endif  // FALKOR_FILE_H_
