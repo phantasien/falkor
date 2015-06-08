@@ -11,7 +11,7 @@ ANDROID_NDK_PREBUILT = ${ANDROID_NDK_ROOT}/toolchains/arm-linux-androideabi-4.8/
 
 test: test-android
 
-test-android: out/v8-android_arm
+test-android: android-lib
 	@cd test/android && \
 	V8_HOME=${CURDIR}/deps/bastian/deps/v8 \
 	V8_LIBS_PATH=${CURDIR}/out/v8-android_arm/Debug/obj.target/deps/bastian/deps/v8/tools/gyp \
@@ -21,18 +21,19 @@ test-android: out/v8-android_arm
 	FALKOR_LIBS_PATH=${CURDIR}/out/v8-android_arm/Debug/obj.target \
 	${ANDROID_NDK_ROOT}/ndk-build
 	@ant -q -f ./test/android/build.xml debug -Dsdk.dir=${ANDROID_HOME}
-	@$(ANDROID_HOME)/platform-tools/adb install -r test/android/bin/falkor_android_test-debug-unaligned.apk 
-	#@$(ANDROID_HOME)/platform-tools/adb logcat -s "Falkor Test" 
 
-out/v8-android_arm:
-	@CC="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-gcc" \
-	CXX="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-g++" \
-	${GYP} -Dbastian_project=${CURDIR} -Dbastian_engine=v8 -Dtarget_arch=arm \
-	       -Dandroid_target_platform=15 \
- 	       -Darm_version=7 -DOS=android \
-	       falkor.gyp
+android-lib: out/v8-android_arm/Makefile
 	@AR="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ar" \
 	RANLIB="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-ranlib" \
 	make -C out/v8-android_arm
+
+out/v8-android_arm/Makefile:
+	@CC="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-gcc" \
+	CXX="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-g++" \
+	LINK="${ANDROID_NDK_PREBUILT}/bin/arm-linux-androideabi-g++" \
+	${GYP} -Dbastian_project=${CURDIR} -Dbastian_engine=v8 -Dtarget_arch=arm \
+	       -Dandroid_target_platform=15 -Dfalkor_platform=android \
+ 	       -Darm_version=7 -DOS=android -Dhost_os=mac \
+	       falkor.gyp
 
 .PHONY: test

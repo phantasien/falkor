@@ -21,23 +21,21 @@
 
 #include "./file.h"
 
-#include <regex>
+#include <cstdlib>
+#include "re2/re2.h"
 
 
 namespace falkor {
 
-bastian::Handle<File> File::Open(const std::string& uri, const std::string& mode) {
+bastian::Handle<File> File::OpenURI(const std::string& uri, const std::string& mode) {
   bastian::Handle<File> file(NULL);
-  std::regex uri_regex("^(\\w+)://(.+)$");
-  std::smatch match;
+  std::string protocol;
+  std::string path;
 
-  if (std::regex_match(uri, uri_regex)) {
-    std::string protocol = match.str(1);
-    std::string path = match.str(2);
-
+  if (RE2::FullMatch(uri, "^(\\w+)://(.+)$", &protocol, &path)) {
     if (protocol == "bundle") {
-      file = BundleFile::New(path);
-      file.Open(mode);
+      bastian::Handle<File> new_file = BundleFile::New(path);
+      file->Open(mode);
     }
   }
 
@@ -47,18 +45,45 @@ bastian::Handle<File> File::Open(const std::string& uri, const std::string& mode
 
 #ifdef FALKOR_ANDROID
 
+
 bastian::Handle<File> BundleFile::New(const std::string& path) {
-  bastian::Handle<File> handle(new AndroidBundleFile(path));
-  return handle;
+  bastian::Handle<File> file(new AndroidBundleFile(path));
+  return file;
 }
 
-AndroidBundleFile::AndroidBundleFile(const std::string& path) : path_(path) {}
+AAssetManager * AndroidBundleFile::asset_manager_ = NULL;
+
+void AndroidBundleFile::SetAssetManager(AAssetManager * asset_manager) {
+  asset_manager_ = asset_manager;
+}
+
+AndroidBundleFile::AndroidBundleFile(const std::string& path) : path_(path), asset_(NULL) {}
 
 bool AndroidBundleFile::Open(const std::string& mode) {
-  return false;
+  AAsset * asset = AAssetManager_open(asset_manager_, path_.c_str(), AASSET_MODE_UNKNOWN);
+
+  if (asset == NULL) return false;
+
+  asset_ = asset;
+  return true;
 }
 
-};
+std::string AndroidBundleFile::Read(int size) {
+  if (asset_ == NULL) return "";
+
+  char * buffer = (char *) malloc(size);
+  std::string result;
+  int read_bytes = AAsset_read(asset_, buffer, size);
+
+  if (read_bytes > 0) {
+    result += buffer;
+  }
+
+  free(buffer);
+  return result;
+}
+
+
 #endif
 
 

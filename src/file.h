@@ -25,7 +25,7 @@
 #include <bastian.h>
 
 #ifdef FALKOR_ANDROID
-
+#include <android/asset_manager.h>
 #endif
 
 namespace falkor {
@@ -33,27 +33,31 @@ namespace falkor {
 
 class File {
  public:
-  static bastian::Handle<File> Open(const std::string& uri, const std::string& mode);
-
- protected:
-  virtual ~File();
-  virtual bool Open(const std::string& mode);
+  static bastian::Handle<File> OpenURI(const std::string& uri, const std::string& mode);
+  virtual bool Open(const std::string& mode) = 0;
+  virtual std::string Read(int size) = 0;
 };
 
 
-class BundleFile : File {
+class BundleFile : public File {
  public:
   static bastian::Handle<File> New(const std::string& path);
- protected:
-  std::string path_;
 };
 
 
 #ifdef FALKOR_ANDROID
-class AndroidBundleFile : BundleFile {
+class AndroidBundleFile : public BundleFile {
   public:
     explicit AndroidBundleFile(const std::string& path);
     bool Open(const std::string& mode);
+    std::string Read(int size);
+
+    static void SetAssetManager(AAssetManager* asset_manager);
+
+  private:
+    std::string path_;
+    AAsset * asset_;
+    static AAssetManager* asset_manager_;
 };
 #endif
 

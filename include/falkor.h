@@ -22,5 +22,6 @@
 #define FALKOR_ROOT_H_
 
 #include "../src/engine.h"
+#include "../src/file.h"
 
 #endif
