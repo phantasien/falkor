@@ -41,5 +41,5 @@ extern "C" JNIEXPORT void JNICALL Java_com_github_phantasien_falkor_test_FalkorT
     std::cout.rdbuf(new androidbuf);
     falkor::AndroidBundleFile::SetAssetManager(AAssetManager_fromJava(env, assetManager));
     bastian::Handle<falkor::File> file = falkor::File::OpenURI("bundle://hello.js", "r");
-    //std::cout << file->Read(1024) << std::endl;
+    std::cout << "***************** " << file->Read(1024) << " *************" << std::endl;
 }

@@ -23,7 +23,7 @@
 
 #include <cstdlib>
 #include "re2/re2.h"
-
+#include <iostream>
 
 namespace falkor {
 
@@ -35,7 +35,7 @@ bastian::Handle<File> File::OpenURI(const std::string& uri, const std::string& m
   if (RE2::FullMatch(uri, "^(\\w+)://(.+)$", &protocol, &path)) {
     if (protocol == "bundle") {
       bastian::Handle<File> new_file = BundleFile::New(path);
-      file->Open(mode);
+      if (new_file->Open(mode)) file = new_file;
     }
   }
 
